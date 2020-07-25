@@ -1,5 +1,7 @@
 import math
 
+import numpy as np
+
 
 class Delatin:
     def __init__(self, data, width, height):
@@ -9,7 +11,12 @@ class Delatin:
         self.height = height
 
         # vertex coordinates (x, y)
-        self.coords = []
+        # TODO: use a smaller dtype for the large array.. np.uint32? Will need
+        # to cast to a different dtype (float?) within inCircle
+        self._coords = np.zeros(height * width * 2, dtype=np.int64)
+        # Number of coordinates, (x, y) counts as one
+        self.coordCount = 0
+
         # mesh triangle indices
         self.triangles = []
 
@@ -39,6 +46,10 @@ class Delatin:
         t0 = self._addTriangle(p3, p0, p2, -1, -1, -1)
         self._addTriangle(p0, p3, p1, t0, -1, -1)
         self._flush()
+
+    @property
+    def coords(self):
+        return self._coords[:self.coordCount * 2]
 
     def run(self, maxError=1):
         """refine the mesh until its maximum error gets below the given one
@@ -73,7 +84,7 @@ class Delatin:
     def _flush(self):
         """rasterize and queue all triangles that got added or updated in _step
         """
-        coords = self.coords
+        coords = self._coords
 
         for i in range(self._pendingLen):
             t = self._pending[i]
@@ -189,12 +200,12 @@ class Delatin:
         p1 = self.triangles[e1]
         p2 = self.triangles[e2]
 
-        ax = self.coords[2 * p0]
-        ay = self.coords[2 * p0 + 1]
-        bx = self.coords[2 * p1]
-        by = self.coords[2 * p1 + 1]
-        cx = self.coords[2 * p2]
-        cy = self.coords[2 * p2 + 1]
+        ax = self._coords[2 * p0]
+        ay = self._coords[2 * p0 + 1]
+        bx = self._coords[2 * p1]
+        by = self._coords[2 * p1 + 1]
+        cx = self._coords[2 * p2]
+        cy = self._coords[2 * p2 + 1]
         px = self._candidates[2 * t]
         py = self._candidates[2 * t + 1]
 
@@ -225,9 +236,10 @@ class Delatin:
     def _addPoint(self, x, y):
         """add coordinates for a new vertex
         """
-        i = len(self.coords) >> 1
-        self.coords.append(x)
-        self.coords.append(y)
+        i = self.coordCount
+        self._coords[i * 2 + 0] = x
+        self._coords[i * 2 + 1] = y
+        self.coordCount += 1
         return i
 
     def _addTriangle(self, a, b, c, ab, bc, ca, e = None):
@@ -335,7 +347,7 @@ class Delatin:
         pr = self.triangles[a]
         pl = self.triangles[al]
         p1 = self.triangles[bl]
-        coords = self.coords
+        coords = self._coords
 
         if not inCircle(
             coords[2 * p0], coords[2 * p0 + 1],
