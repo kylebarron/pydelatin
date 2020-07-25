@@ -372,8 +372,8 @@ class Delatin:
     def _queuePush(self, t, error, rms):
         i = len(self._queue)
         self._queueIndices[t] = i
-        self._queue.push(t)
-        self._errors.push(error)
+        self._queue.append(t)
+        self._errors.append(error)
         self._rmsSum += rms
         self._queueUp(i)
 
