@@ -233,21 +233,56 @@ class Delatin:
     def _addTriangle(self, a, b, c, ab, bc, ca, e = None):
         """add or update a triangle in the mesh
         """
+        # This section is derived from the original C++ code instead of the JS
+        # version because JS allows you to insert into an array by index, _even
+        # if that index is longer than the array_. I.e. it lets you do:
+        #
+        # a = []
+        # a[0] = 1
+        #
+        # While in Python that's an IndexError. Therefore I need to be smarter
+        # about when to append and when to modify existing vertices. Luckily the
+        # C++ version lays that out for me!
+        # https://github.com/fogleman/hmm/blob/f7a8dac4c98779101379b537e45dd069d79bf770/src/triangulator.cpp#L190-L214
+
         if e is None:
             e = len(self.triangles)
 
-        # new triangle index
-        t = e / 3
+            # add triangle vertices
+            self.triangles.append(a)
+            self.triangles.append(b)
+            self.triangles.append(c)
 
-        # add triangle vertices
-        self.triangles[e + 0] = a
-        self.triangles[e + 1] = b
-        self.triangles[e + 2] = c
+            # add triangle halfedges
+            self._halfedges.append(ab)
+            self._halfedges.append(bc)
+            self._halfedges.append(ca)
 
-        # add triangle halfedges
-        self._halfedges[e + 0] = ab
-        self._halfedges[e + 1] = bc
-        self._halfedges[e + 2] = ca
+            # init triangle metadata
+            self._candidates.append(0)
+            self._candidates.append(0)
+            self._queueIndices.append(-1)
+            self._rms.append(0)
+
+        else:
+            # add triangle vertices
+            self.triangles[e + 0] = a
+            self.triangles[e + 1] = b
+            self.triangles[e + 2] = c
+
+            # add triangle halfedges
+            self._halfedges[e + 0] = ab
+            self._halfedges[e + 1] = bc
+            self._halfedges[e + 2] = ca
+
+            # new triangle index
+            t = int(e / 3)
+
+            # init triangle metadata
+            self._candidates[2 * t + 0] = 0
+            self._candidates[2 * t + 1] = 0
+            self._queueIndices[t] = -1
+            self._rms[t] = 0
 
         # link neighboring halfedges
         if ab >= 0:
@@ -259,14 +294,10 @@ class Delatin:
         if ca >= 0:
             self._halfedges[ca] = e + 2
 
-        # init triangle metadata
-        self._candidates[2 * t + 0] = 0
-        self._candidates[2 * t + 1] = 0
-        self._queueIndices[t] = -1
-        self._rms[t] = 0
-
         # add triangle to pending queue for later rasterization
-        self._pending[self._pendingLen] = t
+        # self._pending[self._pendingLen] = t
+        t = int(e / 3)
+        self._pending.append(t)
         self._pendingLen += 1
 
         # return first halfedge index
@@ -370,6 +401,7 @@ class Delatin:
     # priority queue methods
 
     def _queuePush(self, t, error, rms):
+        t = int(t)
         i = len(self._queue)
         self._queueIndices[t] = i
         self._queue.append(t)
@@ -385,12 +417,14 @@ class Delatin:
 
     def _queuePopBack(self):
         t = self._queue.pop()
+        t = int(t)
         self._errors.pop()
         self._rmsSum -= self._rms[t]
         self._queueIndices[t] = -1
         return t
 
     def _queueRemove(self, t):
+        t = int(t)
         i = self._queueIndices[t]
         if i < 0:
             it = self._pending.index(t)
