@@ -1,4 +1,4 @@
-"""Setup for pymartini."""
+"""Setup for pydelatin."""
 from pathlib import Path
 
 import numpy as np
@@ -22,8 +22,8 @@ def find_pyx(path='.'):
 
 
 setup(
-    name="pymartini",
-    version="0.3.1",
+    name="pydelatin",
+    version="0.1.0",
     description="A Python port of Martini for fast terrain mesh generation",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -38,7 +38,7 @@ setup(
     keywords="mesh heightmap elevation terrain numpy",
     author="Kyle Barron",
     author_email="kylebarron2@gmail.com",
-    url="https://github.com/kylebarron/pymartini",
+    url="https://github.com/kylebarron/pydelatin",
     license="MIT",
     packages=find_packages(exclude=["ez_setup", "scripts", "examples", "test"]),
     include_package_data=True,
