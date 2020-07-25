@@ -337,41 +337,39 @@ class Delatin:
         a0 = a - a % 3
         al = a0 + (a + 1) % 3
         ar = a0 + (a + 2) % 3
-        p0 = this.triangles[ar]
-        pr = this.triangles[a]
-        pl = this.triangles[al]
-        hal = this._halfedges[al]
-        har = this._halfedges[ar]
+        p0 = self.triangles[ar]
+        pr = self.triangles[a]
+        pl = self.triangles[al]
+        hal = self._halfedges[al]
+        har = self._halfedges[ar]
 
-        b = this._halfedges[a]
+        b = self._halfedges[a]
 
-        if (b < 0):
-            const t0 = this._addTriangle(pn, p0, pr, -1, har, -1, a0);
-            const t1 = this._addTriangle(p0, pn, pl, t0, -1, hal);
-            this._legalize(t0 + 1);
-            this._legalize(t1 + 2);
-            return;
-        }
+        if b < 0:
+            t0 = self._addTriangle(pn, p0, pr, -1, har, -1, a0)
+            t1 = self._addTriangle(p0, pn, pl, t0, -1, hal)
+            self._legalize(t0 + 1)
+            self._legalize(t1 + 2)
+            return
 
-        const b0 = b - b % 3;
-        const bl = b0 + (b + 2) % 3;
-        const br = b0 + (b + 1) % 3;
-        const p1 = this.triangles[bl];
-        const hbl = this._halfedges[bl];
-        const hbr = this._halfedges[br];
+        b0 = b - b % 3
+        bl = b0 + (b + 2) % 3
+        br = b0 + (b + 1) % 3
+        p1 = self.triangles[bl]
+        hbl = self._halfedges[bl]
+        hbr = self._halfedges[br]
 
-        this._queueRemove(b0 / 3);
+        self._queueRemove(b0 / 3)
 
-        const t0 = this._addTriangle(p0, pr, pn, har, -1, -1, a0);
-        const t1 = this._addTriangle(pr, p1, pn, hbr, -1, t0 + 1, b0);
-        const t2 = this._addTriangle(p1, pl, pn, hbl, -1, t1 + 1);
-        const t3 = this._addTriangle(pl, p0, pn, hal, t0 + 2, t2 + 1);
+        t0 = self._addTriangle(p0, pr, pn, har, -1, -1, a0)
+        t1 = self._addTriangle(pr, p1, pn, hbr, -1, t0 + 1, b0)
+        t2 = self._addTriangle(p1, pl, pn, hbl, -1, t1 + 1)
+        t3 = self._addTriangle(pl, p0, pn, hal, t0 + 2, t2 + 1)
 
-        this._legalize(t0);
-        this._legalize(t1);
-        this._legalize(t2);
-        this._legalize(t3);
-    }
+        self._legalize(t0)
+        self._legalize(t1)
+        self._legalize(t2)
+        self._legalize(t3)
 
     # priority queue methods
 
