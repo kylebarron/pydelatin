@@ -1,7 +1,4 @@
 import math
-from math import sqrt
-
-import numpy as np
 
 
 class Delatin:
@@ -64,7 +61,7 @@ class Delatin:
         """root-mean-square deviation of the current mesh
         """
         if self._rmsSum > 0:
-            return sqrt(self._rmsSum / (self.width * self.height))
+            return math.sqrt(self._rmsSum / (self.width * self.height))
 
         return 0
 
