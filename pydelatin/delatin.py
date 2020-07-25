@@ -111,9 +111,9 @@ class Delatin:
 
         # pre-multiplied z values at vertices
         a = orient(p0x, p0y, p1x, p1y, p2x, p2y)
-        z0 = this.heightAt(p0x, p0y) / a
-        z1 = this.heightAt(p1x, p1y) / a
-        z2 = this.heightAt(p2x, p2y) / a
+        z0 = self.heightAt(p0x, p0y) / a
+        z1 = self.heightAt(p1x, p1y) / a
+        z2 = self.heightAt(p2x, p2y) / a
 
         # iterate over pixels in bounding box
         maxError = 0
