@@ -229,50 +229,52 @@ class Delatin:
         }
     }
 
-    // add coordinates for a new vertex
-    _addPoint(x, y) {
-        const i = this.coords.length >> 1;
-        this.coords.push(x, y);
-        return i;
-    }
+    def _addPoint(self, x, y):
+        """add coordinates for a new vertex
+        """
+        i = self.coords.length >> 1
+        self.coords.append(x)
+        self.coords.append(y)
+        return i
 
-    // add or update a triangle in the mesh
-    _addTriangle(a, b, c, ab, bc, ca, e = this.triangles.length) {
-        const t = e / 3; // new triangle index
+    def _addTriangle(self, a, b, c, ab, bc, ca, e = this.triangles.length):
+        """add or update a triangle in the mesh
+        """
+        # new triangle index
+        t = e / 3
 
-        // add triangle vertices
-        this.triangles[e + 0] = a;
-        this.triangles[e + 1] = b;
-        this.triangles[e + 2] = c;
+        # add triangle vertices
+        self.triangles[e + 0] = a
+        self.triangles[e + 1] = b
+        self.triangles[e + 2] = c
 
-        // add triangle halfedges
-        this._halfedges[e + 0] = ab;
-        this._halfedges[e + 1] = bc;
-        this._halfedges[e + 2] = ca;
+        # add triangle halfedges
+        self._halfedges[e + 0] = ab
+        self._halfedges[e + 1] = bc
+        self._halfedges[e + 2] = ca
 
-        // link neighboring halfedges
-        if (ab >= 0) {
-            this._halfedges[ab] = e + 0;
-        }
-        if (bc >= 0) {
-            this._halfedges[bc] = e + 1;
-        }
-        if (ca >= 0) {
-            this._halfedges[ca] = e + 2;
-        }
+        # link neighboring halfedges
+        if ab >= 0:
+            self._halfedges[ab] = e + 0
 
-        // init triangle metadata
-        this._candidates[2 * t + 0] = 0;
-        this._candidates[2 * t + 1] = 0;
-        this._queueIndices[t] = -1;
-        this._rms[t] = 0;
+        if bc >= 0:
+            self._halfedges[bc] = e + 1
 
-        // add triangle to pending queue for later rasterization
-        this._pending[this._pendingLen++] = t;
+        if ca >= 0:
+            self._halfedges[ca] = e + 2
 
-        // return first halfedge index
-        return e;
-    }
+        # init triangle metadata
+        self._candidates[2 * t + 0] = 0
+        self._candidates[2 * t + 1] = 0
+        self._queueIndices[t] = -1
+        self._rms[t] = 0
+
+        # add triangle to pending queue for later rasterization
+        # TODO(kyle): fix this ++
+        self._pending[this._pendingLen++] = t
+
+        # return first halfedge index
+        return e
 
     def _legalize(self, a):
         """
