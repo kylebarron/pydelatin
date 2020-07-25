@@ -396,7 +396,7 @@ class Delatin:
     def _queueRemove(self, t):
         i = self._queueIndices[t]
         if i < 0:
-            it = self._pending.indexOf(t)
+            it = self._pending.index(t)
             if it != -1:
                 self._pending[it] = self._pending[--self._pendingLen]
             else:
