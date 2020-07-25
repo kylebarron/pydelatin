@@ -231,12 +231,12 @@ class Delatin:
     def _addPoint(self, x, y):
         """add coordinates for a new vertex
         """
-        i = self.coords.length >> 1
+        i = len(self.coords) >> 1
         self.coords.append(x)
         self.coords.append(y)
         return i
 
-    def _addTriangle(self, a, b, c, ab, bc, ca, e = this.triangles.length):
+    def _addTriangle(self, a, b, c, ab, bc, ca, e = len(self.triangles)):
         """add or update a triangle in the mesh
         """
         # new triangle index
@@ -373,7 +373,7 @@ class Delatin:
     # priority queue methods
 
     def _queuePush(self, t, error, rms):
-        i = self._queue.length
+        i = len(self._queue)
         self._queueIndices[t] = i
         self._queue.push(t)
         self._errors.push(error)
@@ -381,7 +381,7 @@ class Delatin:
         self._queueUp(i)
 
     def _queuePop(self):
-        n = self._queue.length - 1
+        n = len(self._queue) - 1
         self._queueSwap(0, n)
         self._queueDown(0, n)
         return self._queuePopBack()
@@ -393,26 +393,24 @@ class Delatin:
         self._queueIndices[t] = -1
         return t
 
-    def _queueRemove(self, t) {
-        const i = this._queueIndices[t];
-        if (i < 0) {
-            const it = this._pending.indexOf(t);
-            if (it !== -1) {
-                this._pending[it] = this._pending[--this._pendingLen];
-            } else {
-                throw new Error('Broken triangulation (something went wrong).');
-            }
-            return;
-        }
-        const n = this._queue.length - 1;
-        if (n !== i) {
-            this._queueSwap(i, n);
-            if (!this._queueDown(i, n)) {
-                this._queueUp(i);
-            }
-        }
-        this._queuePopBack();
-    }
+    def _queueRemove(self, t):
+        i = self._queueIndices[t]
+        if i < 0:
+            it = self._pending.indexOf(t)
+            if it != -1:
+                self._pending[it] = self._pending[--self._pendingLen]
+            else:
+                raise ValueError('Broken triangulation (something went wrong).')
+
+            return
+
+        n = len(self._queue) - 1
+        if n != i:
+            self._queueSwap(i, n)
+            if not self._queueDown(i, n):
+                self._queueUp(i)
+
+        self._queuePopBack()
 
     def _queueLess(self, i, j):
         return self._errors[i] > self._errors[j]
@@ -429,37 +427,35 @@ class Delatin:
         self._errors[j] = e
 
     def _queueUp(self, j0):
-        let j = j0;
-        while (true) {
-            const i = (j - 1) >> 1;
-            if (i === j || !this._queueLess(j, i)) {
-                break;
-            }
-            this._queueSwap(i, j);
-            j = i;
-        }
-    }
+        j = j0
+        while True:
+            i = (j - 1) >> 1
+            if i == j or not self._queueLess(j, i):
+                break
 
-    def _queueDown(self, i0, n) {
-        let i = i0;
-        while (true) {
-            const j1 = 2 * i + 1;
-            if (j1 >= n || j1 < 0) {
-                break;
-            }
-            const j2 = j1 + 1;
-            let j = j1;
-            if (j2 < n && this._queueLess(j2, j1)) {
-                j = j2;
-            }
-            if (!this._queueLess(j, i)) {
-                break;
-            }
-            this._queueSwap(i, j);
-            i = j;
-        }
-        return i > i0;
-    }
+            self._queueSwap(i, j)
+            j = i
+
+    def _queueDown(self, i0, n):
+        i = i0
+        while True:
+            j1 = 2 * i + 1
+            if j1 >= n or j1 < 0:
+                break
+
+            j2 = j1 + 1
+            j = j1
+
+            if j2 < n and self._queueLess(j2, j1):
+                j = j2
+
+            if not self._queueLess(j, i):
+                break
+
+            self._queueSwap(i, j)
+            i = j
+
+        return i > i0
 
 
 def orient(ax, ay, bx, by, cx, cy):
