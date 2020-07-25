@@ -274,62 +274,60 @@ class Delatin:
         return e;
     }
 
-    _legalize(a) {
-        // if the pair of triangles doesn't satisfy the Delaunay condition
-        // (p1 is inside the circumcircle of [p0, pl, pr]), flip them,
-        // then do the same check/flip recursively for the new pair of triangles
-        //
-        //           pl                    pl
-        //          /||\                  /  \
-        //       al/ || \bl            al/    \a
-        //        /  ||  \              /      \
-        //       /  a||b  \    flip    /___ar___\
-        //     p0\   ||   /p1   =>   p0\---bl---/p1
-        //        \  ||  /              \      /
-        //       ar\ || /br             b\    /br
-        //          \||/                  \  /
-        //           pr                    pr
+    def _legalize(self, a):
+        """
+        if the pair of triangles doesn't satisfy the Delaunay condition
+        (p1 is inside the circumcircle of [p0, pl, pr]), flip them,
+        then do the same check/flip recursively for the new pair of triangles
 
-        const b = this._halfedges[a];
+                  pl                    pl
+                 /||\                  /  \
+              al/ || \bl            al/    \a
+               /  ||  \              /      \
+              /  a||b  \    flip    /___ar___\
+            p0\   ||   /p1   =>   p0\---bl---/p1
+               \  ||  /              \      /
+              ar\ || /br             b\    /br
+                 \||/                  \  /
+                  pr                    pr
+        """
+        b = self._halfedges[a]
 
-        if (b < 0) {
-            return;
-        }
+        if b < 0:
+            return
 
-        const a0 = a - a % 3;
-        const b0 = b - b % 3;
-        const al = a0 + (a + 1) % 3;
-        const ar = a0 + (a + 2) % 3;
-        const bl = b0 + (b + 2) % 3;
-        const br = b0 + (b + 1) % 3;
-        const p0 = this.triangles[ar];
-        const pr = this.triangles[a];
-        const pl = this.triangles[al];
-        const p1 = this.triangles[bl];
-        const coords = this.coords;
+        a0 = a - a % 3
+        b0 = b - b % 3
+        al = a0 + (a + 1) % 3
+        ar = a0 + (a + 2) % 3
+        bl = b0 + (b + 2) % 3
+        br = b0 + (b + 1) % 3
+        p0 = self.triangles[ar]
+        pr = self.triangles[a]
+        pl = self.triangles[al]
+        p1 = self.triangles[bl]
+        coords = self.coords
 
-        if (!inCircle(
+        if not inCircle(
             coords[2 * p0], coords[2 * p0 + 1],
             coords[2 * pr], coords[2 * pr + 1],
             coords[2 * pl], coords[2 * pl + 1],
-            coords[2 * p1], coords[2 * p1 + 1])) {
-            return;
-        }
+            coords[2 * p1], coords[2 * p1 + 1]):
+            return
 
-        const hal = this._halfedges[al];
-        const har = this._halfedges[ar];
-        const hbl = this._halfedges[bl];
-        const hbr = this._halfedges[br];
+        hal = self._halfedges[al]
+        har = self._halfedges[ar]
+        hbl = self._halfedges[bl]
+        hbr = self._halfedges[br]
 
-        this._queueRemove(a0 / 3);
-        this._queueRemove(b0 / 3);
+        self._queueRemove(a0 / 3)
+        self._queueRemove(b0 / 3)
 
-        const t0 = this._addTriangle(p0, p1, pl, -1, hbl, hal, a0);
-        const t1 = this._addTriangle(p1, p0, pr, t0, har, hbr, b0);
+        t0 = self._addTriangle(p0, p1, pl, -1, hbl, hal, a0)
+        t1 = self._addTriangle(p1, p0, pr, t0, har, hbr, b0)
 
-        this._legalize(t0 + 1);
-        this._legalize(t1 + 2);
-    }
+        self._legalize(t0 + 1)
+        self._legalize(t1 + 2)
 
     def _handleCollinear(self, pn, a):
         """handle a case where new vertex is on the edge of a triangle
