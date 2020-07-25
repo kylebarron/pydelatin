@@ -1,3 +1,4 @@
+import math
 from math import sqrt
 
 import numpy as np
@@ -101,9 +102,9 @@ class Delatin:
         maxY = max(p0y, p1y, p2y)
 
         # forward differencing variables
-        let w00 = orient(p1x, p1y, p2x, p2y, minX, minY)
-        let w01 = orient(p2x, p2y, p0x, p0y, minX, minY)
-        let w02 = orient(p0x, p0y, p1x, p1y, minX, minY)
+        w00 = orient(p1x, p1y, p2x, p2y, minX, minY)
+        w01 = orient(p2x, p2y, p0x, p0y, minX, minY)
+        w02 = orient(p0x, p0y, p1x, p1y, minX, minY)
         a01 = p1y - p0y
         b01 = p0x - p1x
         a12 = p2y - p1y
@@ -118,68 +119,64 @@ class Delatin:
         z2 = this.heightAt(p2x, p2y) / a
 
         # iterate over pixels in bounding box
-        let maxError = 0
-        let mx = 0
-        let my = 0
-        let rms = 0
-        for (let y = minY; y <= maxY; y++) {
+        maxError = 0
+        mx = 0
+        my = 0
+        rms = 0
+        for y in range(minY, maxY + 1):
             # compute starting offset
-            let dx = 0
-            if (w00 < 0 && a12 !== 0) {
-                dx = max(dx, Math.floor(-w00 / a12))
-            }
-            if (w01 < 0 && a20 !== 0) {
-                dx = max(dx, Math.floor(-w01 / a20))
-            }
-            if (w02 < 0 && a01 !== 0) {
-                dx = max(dx, Math.floor(-w02 / a01))
-            }
+            dx = 0
+            if w00 < 0 and a12 != 0:
+                dx = max(dx, math.floor(-w00 / a12))
 
-            let w0 = w00 + a12 * dx
-            let w1 = w01 + a20 * dx
-            let w2 = w02 + a01 * dx
+            if w01 < 0 and a20 != 0:
+                dx = max(dx, math.floor(-w01 / a20))
 
-            let wasInside = false
+            if w02 < 0 and a01 != 0:
+                dx = max(dx, math.floor(-w02 / a01))
 
-            for (let x = minX + dx; x <= maxX; x++) {
+
+            w0 = w00 + a12 * dx
+            w1 = w01 + a20 * dx
+            w2 = w02 + a01 * dx
+
+            wasInside = False
+
+            for x in range(minX, maxX + 1):
                 # check if inside triangle
-                if (w0 >= 0 && w1 >= 0 && w2 >= 0) {
-                    wasInside = true
+                if w0 >= 0 and w1 >= 0 and w2 >= 0:
+                    wasInside = True
 
                     # compute z using barycentric coordinates
                     z = z0 * w0 + z1 * w1 + z2 * w2
-                    dz = Math.abs(z - this.heightAt(x, y))
+                    dz = abs(z - self.heightAt(x, y))
                     rms += dz * dz
-                    if (dz > maxError) {
+                    if dz > maxError:
                         maxError = dz
                         mx = x
                         my = y
-                    }
-                } else if (wasInside) {
+
+                elif wasInside:
                     break
-                }
 
                 w0 += a12
                 w1 += a20
                 w2 += a01
-            }
 
             w00 += b12
             w01 += b20
             w02 += b01
-        }
 
-        if (mx === p0x && my === p0y || mx === p1x && my === p1y || mx === p2x && my === p2y) {
+        if (mx == p0x and my == p0y or mx == p1x and my == p1y or mx == p2x and my == p2y):
             maxError = 0
-        }
 
         # update triangle metadata
-        this._candidates[2 * t] = mx
-        this._candidates[2 * t + 1] = my
-        this._rms[t] = rms
+        self._candidates[2 * t] = mx
+        self._candidates[2 * t + 1] = my
+        self._rms[t] = rms
 
         # add triangle to priority queue
-        this._queuePush(t, maxError, rms)
+        self._queuePush(t, maxError, rms)
 
     def _step(self):
         """process the next triangle in the queue, splitting it with a new point
