@@ -233,9 +233,12 @@ class Delatin:
         self.coords.append(y)
         return i
 
-    def _addTriangle(self, a, b, c, ab, bc, ca, e = len(self.triangles)):
+    def _addTriangle(self, a, b, c, ab, bc, ca, e = None):
         """add or update a triangle in the mesh
         """
+        if e is None:
+            e = len(self.triangles)
+
         # new triangle index
         t = e / 3
 
@@ -266,8 +269,8 @@ class Delatin:
         self._rms[t] = 0
 
         # add triangle to pending queue for later rasterization
-        # TODO(kyle): fix this ++
-        self._pending[this._pendingLen++] = t
+        self._pending[self._pendingLen] = t
+        self._pendingLen += 1
 
         # return first halfedge index
         return e
@@ -383,7 +386,7 @@ class Delatin:
         self._queueDown(0, n)
         return self._queuePopBack()
 
-    def _queuePopBack(self) {
+    def _queuePopBack(self):
         t = self._queue.pop()
         self._errors.pop()
         self._rmsSum -= self._rms[t]
@@ -395,7 +398,8 @@ class Delatin:
         if i < 0:
             it = self._pending.index(t)
             if it != -1:
-                self._pending[it] = self._pending[--self._pendingLen]
+                self._pendingLen -= 1
+                self._pending[it] = self._pending[self._pendingLen]
             else:
                 raise ValueError('Broken triangulation (something went wrong).')
 
@@ -412,7 +416,7 @@ class Delatin:
     def _queueLess(self, i, j):
         return self._errors[i] > self._errors[j]
 
-    def _queueSwap(self, i, j) {
+    def _queueSwap(self, i, j):
         pi = self._queue[i]
         pj = self._queue[j]
         self._queue[i] = pj
@@ -471,6 +475,6 @@ def inCircle(ax, ay, bx, by, cx, cy, px, py):
     bp = ex * ex + ey * ey
     cp = fx * fx + fy * fy
 
-    return dx * (ey * cp - bp * fy) -
+    return (dx * (ey * cp - bp * fy) -
            dy * (ex * cp - bp * fx) +
-           ap * (ex * fy - ey * fx) < 0
+           ap * (ex * fy - ey * fx)) < 0
