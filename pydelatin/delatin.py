@@ -181,53 +181,52 @@ class Delatin:
         # add triangle to priority queue
         this._queuePush(t, maxError, rms)
 
-    // process the next triangle in the queue, splitting it with a new point
-    _step() {
-        // pop triangle with highest error from priority queue
-        const t = this._queuePop();
+    def _step(self):
+        """process the next triangle in the queue, splitting it with a new point
+        """
+        # pop triangle with highest error from priority queue
+        t = self._queuePop()
 
-        const e0 = t * 3 + 0;
-        const e1 = t * 3 + 1;
-        const e2 = t * 3 + 2;
+        e0 = t * 3 + 0
+        e1 = t * 3 + 1
+        e2 = t * 3 + 2
 
-        const p0 = this.triangles[e0];
-        const p1 = this.triangles[e1];
-        const p2 = this.triangles[e2];
+        p0 = self.triangles[e0]
+        p1 = self.triangles[e1]
+        p2 = self.triangles[e2]
 
-        const ax = this.coords[2 * p0];
-        const ay = this.coords[2 * p0 + 1];
-        const bx = this.coords[2 * p1];
-        const by = this.coords[2 * p1 + 1];
-        const cx = this.coords[2 * p2];
-        const cy = this.coords[2 * p2 + 1];
-        const px = this._candidates[2 * t];
-        const py = this._candidates[2 * t + 1];
+        ax = self.coords[2 * p0]
+        ay = self.coords[2 * p0 + 1]
+        bx = self.coords[2 * p1]
+        by = self.coords[2 * p1 + 1]
+        cx = self.coords[2 * p2]
+        cy = self.coords[2 * p2 + 1]
+        px = self._candidates[2 * t]
+        py = self._candidates[2 * t + 1]
 
-        const pn = this._addPoint(px, py);
+        pn = self._addPoint(px, py)
 
-        if (orient(ax, ay, bx, by, px, py) === 0) {
-            this._handleCollinear(pn, e0);
+        if orient(ax, ay, bx, by, px, py) == 0:
+            self._handleCollinear(pn, e0)
 
-        } else if (orient(bx, by, cx, cy, px, py) === 0) {
-            this._handleCollinear(pn, e1);
+        elif orient(bx, by, cx, cy, px, py) == 0:
+            self._handleCollinear(pn, e1)
 
-        } else if (orient(cx, cy, ax, ay, px, py) === 0) {
-            this._handleCollinear(pn, e2);
+        elif orient(cx, cy, ax, ay, px, py) == 0:
+            self._handleCollinear(pn, e2)
 
-        } else {
-            const h0 = this._halfedges[e0];
-            const h1 = this._halfedges[e1];
-            const h2 = this._halfedges[e2];
+        else:
+            h0 = self._halfedges[e0]
+            h1 = self._halfedges[e1]
+            h2 = self._halfedges[e2]
 
-            const t0 = this._addTriangle(p0, p1, pn, h0, -1, -1, e0);
-            const t1 = this._addTriangle(p1, p2, pn, h1, -1, t0 + 1);
-            const t2 = this._addTriangle(p2, p0, pn, h2, t0 + 2, t1 + 1);
+            t0 = self._addTriangle(p0, p1, pn, h0, -1, -1, e0)
+            t1 = self._addTriangle(p1, p2, pn, h1, -1, t0 + 1)
+            t2 = self._addTriangle(p2, p0, pn, h2, t0 + 2, t1 + 1)
 
-            this._legalize(t0);
-            this._legalize(t1);
-            this._legalize(t2);
-        }
-    }
+            self._legalize(t0)
+            self._legalize(t1)
+            self._legalize(t2)
 
     def _addPoint(self, x, y):
         """add coordinates for a new vertex
