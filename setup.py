@@ -5,6 +5,7 @@ import numpy as np
 # setuptools must be before Cython
 from setuptools import find_packages, setup
 from Cython.Build import cythonize
+from distutils.extension import Extension
 
 with open("README.md") as f:
     readme = f.read()
@@ -18,8 +19,19 @@ extra_reqs = {
 
 # Ref https://suzyahyah.github.io/cython/programming/2018/12/01/Gotchas-in-Cython.html
 def find_pyx(path='.'):
-    return list(map(str, Path(path).glob('**/*.pyx')))
+    path = Path(path)
+    all_files = []
+    all_files.extend(path.glob('**/*.pyx'))
+    all_files.extend(path.glob('**/*.cpp'))
+    return list(map(str, all_files))
 
+
+extension = Extension(
+    "pydelatin",
+    find_pyx(),
+    # libraries=["glm", "hmm"],
+    # library_dirs=["/usr/local/Cellar/glm/0.9.9.8/lib/"]
+)
 
 setup(
     name="pydelatin",
@@ -45,7 +57,10 @@ setup(
     zip_safe=False,
     install_requires=inst_reqs,
     extras_require=extra_reqs,
-    ext_modules=cythonize(find_pyx(), language_level=3),
+    ext_modules=cythonize([extension],
+                          language_level=3,
+                          # language='c++'
+                          ),
     # Include Numpy headers
     include_dirs=[np.get_include()],
 )
