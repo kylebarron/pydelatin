@@ -12,7 +12,6 @@ namespace py = pybind11;
 
 #include "base.h"
 #include "heightmap.h"
-#include "stl.h"
 #include "triangulator.h"
 
 int num_pixels(std::string inFile) {

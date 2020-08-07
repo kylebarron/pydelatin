@@ -28,7 +28,6 @@ ext_modules = [
             'src/blur.cpp',
             'src/heightmap.cpp',
             'src/main.cpp',
-            'src/stl.cpp',
             'src/triangulator.cpp',
         ]),
         include_dirs=[
