@@ -1,9 +1,12 @@
-from setuptools import find_packages, setup, Extension
-from setuptools.command.build_ext import build_ext
 import sys
-import setuptools
 
-__version__ = '0.1.0'
+import setuptools
+from setuptools import Extension, find_packages, setup
+from setuptools.command.build_ext import build_ext
+
+
+with open("README.md") as f:
+    readme = f.read()
 
 
 class get_pybind_include(object):
@@ -110,15 +113,17 @@ class BuildExt(build_ext):
 
 setup(
     name='pydelatin',
-    version=__version__,
+    version='0.0.1',
     author='Kyle Barron',
     author_email='kylebarron2@gmail.com',
     url='https://github.com/kylebarron/pydelatin',
     description='A wrapper for hmm',
-    long_description='',
+    long_description=readme,
+    long_description_content_type="text/markdown",
     packages=find_packages(include=['pydelatin', 'pydelatin.*']),
     ext_modules=ext_modules,
-    setup_requires=['pybind11>=2.5.0'],
+    install_requires=['numpy'],
+    setup_requires=['pybind11>=2.5.0', 'numpy'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
 )

@@ -2,6 +2,9 @@ include CHANGELOG.md
 include LICENSE
 include README.md
 
+global-include *.cpp
+global-include *.h
+
 recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
