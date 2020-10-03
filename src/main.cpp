@@ -1,7 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
-namespace py = pybind11;
 
 #include "pybind11_glm.hpp"
 
@@ -13,6 +12,8 @@ namespace py = pybind11;
 #include "base.h"
 #include "heightmap.h"
 #include "triangulator.h"
+
+namespace py = pybind11;
 
 int num_pixels(std::string inFile) {
     const auto hm = std::make_shared<Heightmap>(inFile);
@@ -45,7 +46,7 @@ py::array_t<double> add_arrays(py::array_t<double> input1, py::array_t<double> i
     return result;
 }
 
-std::vector<glm::vec3> test(int width, int height, std::vector<float> data) {
+Triangulator create_mesh(int width, int height, std::vector<float> data) {
   const auto hm = std::make_shared<Heightmap>(width, height, data);
   int w = hm->Width();
   int h = hm->Height();
@@ -60,9 +61,29 @@ std::vector<glm::vec3> test(int width, int height, std::vector<float> data) {
   tri.Run(maxError, maxTriangles, maxPoints);
   auto points = tri.Points(zScale * zExaggeration);
   auto triangles = tri.Triangles();
-  return points;
-  // return w * h;
+  return tri;
 }
+
+struct Pet {
+    Pet(const std::string &name) : name(name) { }
+    void setName(const std::string &name_) { name = name_; }
+    const std::string &getName() const { return name; }
+
+    std::string name;
+};
+
+struct PydelatinTriangulator {
+    PydelatinTriangulator(const int &width, const int &height) : width(width), height(height) { }
+
+    void setWidth(const int &width_) { width = width_; }
+    const int &getWidth() const { return width; }
+
+    void setHeight(const int &height_) { height = height_; }
+    const int &getHeight() const { return height; }
+
+    int width;
+    int height;
+};
 
 PYBIND11_MODULE(pydelatin, m) {
     m.doc() = R"pbdoc(
@@ -78,6 +99,19 @@ PYBIND11_MODULE(pydelatin, m) {
            subtract
     )pbdoc";
 
+    py::class_<Pet>(m, "Pet")
+        .def(py::init<const std::string &>())
+        .def("setName", &Pet::setName)
+        .def("getName", &Pet::getName);
+
+    py::class_<PydelatinTriangulator>(m, "PydelatinTriangulator")
+        .def(py::init<const int &, const int &>())
+        .def("setWidth", &PydelatinTriangulator::setWidth)
+        .def("getWidth", &PydelatinTriangulator::getWidth)
+        .def("setHeight", &PydelatinTriangulator::setHeight)
+        .def("getHeight", &PydelatinTriangulator::getHeight)
+        ;
+
     // m.def("add", &add, R"pbdoc(
     //     Add two numbers
     //
@@ -92,7 +126,7 @@ PYBIND11_MODULE(pydelatin, m) {
 
     m.def("add_arrays", &add_arrays, "Add two NumPy arrays");
 
-    m.def("test", &test, "Add two NumPy arrays");
+    m.def("create_mesh", &create_mesh, "Add two NumPy arrays");
 
     // m.def("test", &test, R"pbdoc(
     //     Test!
