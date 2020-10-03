@@ -73,13 +73,17 @@ struct Pet {
 };
 
 struct PydelatinTriangulator {
-    PydelatinTriangulator(const int &width, const int &height) : width(width), height(height) { }
+    PydelatinTriangulator(const int &width, const int &height) :
+      width(width), height(height) { }
 
     void setWidth(const int &width_) { width = width_; }
     const int &getWidth() const { return width; }
 
     void setHeight(const int &height_) { height = height_; }
     const int &getHeight() const { return height; }
+
+    void setMaxError(const float &maxError_) { maxError = maxError_; }
+    const float &getMaxError() const { return maxError; }
 
     void setData(const std::vector<float> &data_) { data = data_; }
     const std::vector<float> &getData() const { return data; }
@@ -95,12 +99,6 @@ struct PydelatinTriangulator {
         int w = hm->Width();
         int h = hm->Height();
 
-        const float maxError = 0.001;
-        const float zScale = 1;
-        const float zExaggeration = 1;
-        const int maxTriangles = 0;
-        const int maxPoints = 0;
-
         Triangulator tri(hm);
         tri.Run(maxError, maxTriangles, maxPoints);
         points = tri.Points(zScale * zExaggeration);
@@ -109,6 +107,11 @@ struct PydelatinTriangulator {
 
     int width;
     int height;
+    float maxError = 0.001;
+    float zScale = 1;
+    float zExaggeration = 1;
+    int maxTriangles = 0;
+    int maxPoints = 0;
     std::vector<float> data;
     std::vector<glm::vec3> points;
     std::vector<glm::ivec3> triangles;
@@ -139,6 +142,8 @@ PYBIND11_MODULE(pydelatin, m) {
         .def("getWidth", &PydelatinTriangulator::getWidth)
         .def("setHeight", &PydelatinTriangulator::setHeight)
         .def("getHeight", &PydelatinTriangulator::getHeight)
+        .def("setMaxError", &PydelatinTriangulator::setMaxError)
+        .def("getMaxError", &PydelatinTriangulator::getMaxError)
         .def("setData", &PydelatinTriangulator::setData)
         .def("getData", &PydelatinTriangulator::getData)
         .def("setPoints", &PydelatinTriangulator::setPoints)
@@ -147,12 +152,6 @@ PYBIND11_MODULE(pydelatin, m) {
         .def("getTriangles", &PydelatinTriangulator::getTriangles)
         .def("run", &PydelatinTriangulator::run)
         ;
-
-    // m.def("add", &add, R"pbdoc(
-    //     Add two numbers
-    //
-    //     Some other explanation about the add function.
-    // )pbdoc");
 
     m.def("num_pixels", &num_pixels, R"pbdoc(
         Say Hello world!
