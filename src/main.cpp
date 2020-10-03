@@ -73,10 +73,41 @@ struct PydelatinTriangulator {
         int w = hm->Width();
         int h = hm->Height();
 
+        // auto level heightmap
+        if (level) {
+            hm->AutoLevel();
+        }
+
+        // invert heightmap
+        if (invert) {
+            hm->Invert();
+        }
+
+        // blur heightmap
+        if (blurSigma > 0) {
+            hm->GaussianBlur(blurSigma);
+        }
+
+        // apply gamma curve
+        if (gamma > 0) {
+            hm->GammaCurve(gamma);
+        }
+
+        // add border
+        if (borderSize > 0) {
+            hm->AddBorder(borderSize, borderHeight);
+        }
+
         Triangulator tri(hm);
         tri.Run(maxError, maxTriangles, maxPoints);
         points = tri.Points(zScale * zExaggeration);
         triangles = tri.Triangles();
+
+        // add base
+        if (baseHeight > 0) {
+            const float z = -baseHeight * zScale * zExaggeration;
+            AddBase(points, triangles, w, h, z);
+        }
     }
 
     int width;
@@ -86,6 +117,14 @@ struct PydelatinTriangulator {
     float zExaggeration = 1;
     int maxTriangles = 0;
     int maxPoints = 0;
+    bool level = false;
+    bool invert = false;
+    int blurSigma = 0;
+    float gamma = 0;
+    int borderSize = 0;
+    float borderHeight = 1;
+    float baseHeight = 0;
+
     std::vector<float> data;
     std::vector<glm::vec3> points;
     std::vector<glm::ivec3> triangles;
