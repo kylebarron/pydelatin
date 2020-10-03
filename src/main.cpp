@@ -130,7 +130,7 @@ struct PydelatinTriangulator {
     std::vector<glm::ivec3> triangles;
 };
 
-PYBIND11_MODULE(pydelatin, m) {
+PYBIND11_MODULE(_pydelatin, m) {
     m.doc() = R"pbdoc(
         Pybind11 example plugin
         -----------------------

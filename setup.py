@@ -1,4 +1,4 @@
-from setuptools import setup, Extension
+from setuptools import find_packages, setup, Extension
 from setuptools.command.build_ext import build_ext
 import sys
 import setuptools
@@ -20,7 +20,7 @@ class get_pybind_include(object):
 
 ext_modules = [
     Extension(
-        'pydelatin',
+        '_pydelatin',
         # Sort input source files to ensure bit-for-bit reproducible builds
         # (https://github.com/pybind/python_example/pull/53)
         sorted([
@@ -116,6 +116,7 @@ setup(
     url='https://github.com/kylebarron/pydelatin',
     description='A wrapper for hmm',
     long_description='',
+    packages=find_packages(include=['pydelatin', 'pydelatin.*']),
     ext_modules=ext_modules,
     setup_requires=['pybind11>=2.5.0'],
     cmdclass={'build_ext': BuildExt},
