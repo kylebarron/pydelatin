@@ -47,8 +47,18 @@ py::array_t<double> add_arrays(py::array_t<double> input1, py::array_t<double> i
 }
 
 struct PydelatinTriangulator {
-    PydelatinTriangulator(const int &width, const int &height) :
-      width(width), height(height) { }
+    PydelatinTriangulator(
+      const std::vector<float> &data, const int width, const int height,
+      const float maxError, const float zScale, const float zExaggeration,
+      const int maxTriangles, const int maxPoints, const bool level,
+      const bool invert, const int blurSigma, const float gamma,
+      const int borderSize, const float borderHeight, const float baseHeight
+    ) :
+      data(data), width(width), height(height), maxError(maxError), zScale(zScale),
+      zExaggeration(zExaggeration), maxTriangles(maxTriangles), maxPoints(maxPoints),
+      level(level), invert(invert), blurSigma(blurSigma), gamma(gamma),
+      borderSize(borderSize), borderHeight(borderHeight), baseHeight(baseHeight)
+      { }
 
     void setWidth(const int &width_) { width = width_; }
     const int &getWidth() const { return width; }
@@ -60,12 +70,10 @@ struct PydelatinTriangulator {
     const float &getMaxError() const { return maxError; }
 
     void setData(const std::vector<float> &data_) { data = data_; }
-    const std::vector<float> &getData() const { return data; }
 
-    void setPoints(const std::vector<glm::vec3> &points_) { points = points_; }
+    // NOTE: I _want_ to be able to return a py:array_t<glm:ivec3>
+    // That doesn't seem to work though
     const std::vector<glm::vec3> &getPoints() const { return points; }
-
-    void setTriangles(const std::vector<glm::ivec3> &triangles_) { triangles = triangles_; }
     const std::vector<glm::ivec3> &getTriangles() const { return triangles; }
 
     void run() {
@@ -112,18 +120,18 @@ struct PydelatinTriangulator {
 
     int width;
     int height;
-    float maxError = 0.001;
-    float zScale = 1;
-    float zExaggeration = 1;
-    int maxTriangles = 0;
-    int maxPoints = 0;
-    bool level = false;
-    bool invert = false;
-    int blurSigma = 0;
-    float gamma = 0;
-    int borderSize = 0;
-    float borderHeight = 1;
-    float baseHeight = 0;
+    float maxError;
+    float zScale;
+    float zExaggeration;
+    int maxTriangles;
+    int maxPoints;
+    bool level;
+    bool invert;
+    int blurSigma;
+    float gamma;
+    int borderSize;
+    float borderHeight;
+    float baseHeight;
 
     std::vector<float> data;
     std::vector<glm::vec3> points;
@@ -145,7 +153,12 @@ PYBIND11_MODULE(_pydelatin, m) {
     )pbdoc";
 
     py::class_<PydelatinTriangulator>(m, "PydelatinTriangulator")
-        .def(py::init<const int &, const int &>())
+        .def(py::init<
+          const std::vector<float> &, const int, const int,
+          const float, const float, const float,
+          const int, const int, const bool, const bool, const int,
+          const float, const int, const float, const float
+          >())
         .def("setWidth", &PydelatinTriangulator::setWidth)
         .def("getWidth", &PydelatinTriangulator::getWidth)
         .def("setHeight", &PydelatinTriangulator::setHeight)
@@ -153,10 +166,7 @@ PYBIND11_MODULE(_pydelatin, m) {
         .def("setMaxError", &PydelatinTriangulator::setMaxError)
         .def("getMaxError", &PydelatinTriangulator::getMaxError)
         .def("setData", &PydelatinTriangulator::setData)
-        .def("getData", &PydelatinTriangulator::getData)
-        .def("setPoints", &PydelatinTriangulator::setPoints)
         .def("getPoints", &PydelatinTriangulator::getPoints)
-        .def("setTriangles", &PydelatinTriangulator::setTriangles)
         .def("getTriangles", &PydelatinTriangulator::getTriangles)
         .def("run", &PydelatinTriangulator::run)
         ;
