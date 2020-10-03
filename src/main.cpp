@@ -81,8 +81,37 @@ struct PydelatinTriangulator {
     void setHeight(const int &height_) { height = height_; }
     const int &getHeight() const { return height; }
 
+    void setData(const std::vector<float> &data_) { data = data_; }
+    const std::vector<float> &getData() const { return data; }
+
+    void setPoints(const std::vector<glm::vec3> &points_) { points = points_; }
+    const std::vector<glm::vec3> &getPoints() const { return points; }
+
+    void setTriangles(const std::vector<glm::ivec3> &triangles_) { triangles = triangles_; }
+    const std::vector<glm::ivec3> &getTriangles() const { return triangles; }
+
+    void run() {
+        const auto hm = std::make_shared<Heightmap>(width, height, data);
+        int w = hm->Width();
+        int h = hm->Height();
+
+        const float maxError = 0.001;
+        const float zScale = 1;
+        const float zExaggeration = 1;
+        const int maxTriangles = 0;
+        const int maxPoints = 0;
+
+        Triangulator tri(hm);
+        tri.Run(maxError, maxTriangles, maxPoints);
+        points = tri.Points(zScale * zExaggeration);
+        triangles = tri.Triangles();
+    }
+
     int width;
     int height;
+    std::vector<float> data;
+    std::vector<glm::vec3> points;
+    std::vector<glm::ivec3> triangles;
 };
 
 PYBIND11_MODULE(pydelatin, m) {
@@ -110,6 +139,13 @@ PYBIND11_MODULE(pydelatin, m) {
         .def("getWidth", &PydelatinTriangulator::getWidth)
         .def("setHeight", &PydelatinTriangulator::setHeight)
         .def("getHeight", &PydelatinTriangulator::getHeight)
+        .def("setData", &PydelatinTriangulator::setData)
+        .def("getData", &PydelatinTriangulator::getData)
+        .def("setPoints", &PydelatinTriangulator::setPoints)
+        .def("getPoints", &PydelatinTriangulator::getPoints)
+        .def("setTriangles", &PydelatinTriangulator::setTriangles)
+        .def("getTriangles", &PydelatinTriangulator::getTriangles)
+        .def("run", &PydelatinTriangulator::run)
         ;
 
     // m.def("add", &add, R"pbdoc(
