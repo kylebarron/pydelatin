@@ -2,7 +2,8 @@
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 
-#include "pybind11_glm.hpp"
+// No longer needed because I'm creating numpy arrays to pass back
+// #include "pybind11_glm.hpp"
 
 #include <chrono>
 #include <functional>
@@ -17,7 +18,7 @@ namespace py = pybind11;
 
 struct PydelatinTriangulator {
     PydelatinTriangulator(
-      const std::vector<float> &data, const int width, const int height,
+      const int width, const int height,
       const float maxError, const float zScale, const float zExaggeration,
       const int maxTriangles, const int maxPoints, const bool level,
       const bool invert, const int blurSigma, const float gamma,
@@ -38,12 +39,56 @@ struct PydelatinTriangulator {
     void setMaxError(const float &maxError_) { maxError = maxError_; }
     const float &getMaxError() const { return maxError; }
 
-    void setData(const std::vector<float> &data_) { data = data_; }
+    void setData(const py::array_t<float> &data_) {
+      // x must have ndim = 1; can be non-writeable
+      auto r = data_.unchecked<1>();
+      ssize_t size = r.shape(0);
 
-    // NOTE: I _want_ to be able to return a py:array_t<glm:ivec3>
-    // That doesn't seem to work though
-    const std::vector<glm::vec3> &getPoints() const { return points; }
-    const std::vector<glm::ivec3> &getTriangles() const { return triangles; }
+      std::vector<float> data__(size);
+
+      for (size_t i = 0; i < size; i++) {
+          data__[i] = r(i);
+      }
+
+      data = data__;
+    }
+
+    // https://stackoverflow.com/a/49693704
+    const py::array_t<float> getPoints() const {
+      /* No pointer is passed, so NumPy will allocate the buffer */
+      auto result = py::array_t<float>(points.size() * 3);
+
+      py::buffer_info buf = result.request();
+
+      float *ptr1 = (float *) buf.ptr;
+
+      for (size_t i = 0; i < points.size(); i++) {
+        const auto &p = points[i];
+        ptr1[i * 3 + 0] = p.x;
+        ptr1[i * 3 + 1] = p.y;
+        ptr1[i * 3 + 2] = p.z;
+      }
+
+      return result;
+    }
+
+    const py::array_t<int32_t> getTriangles() const {
+      /* No pointer is passed, so NumPy will allocate the buffer */
+      auto result = py::array_t<int32_t>(triangles.size() * 3);
+
+      py::buffer_info buf = result.request();
+
+      int32_t *ptr1 = (int32_t *) buf.ptr;
+
+      for (size_t i = 0; i < triangles.size(); i++) {
+        const auto &p = triangles[i];
+        ptr1[i * 3 + 0] = p.x;
+        ptr1[i * 3 + 1] = p.y;
+        ptr1[i * 3 + 2] = p.z;
+      }
+
+      return result;
+    }
 
     void run() {
         const auto hm = std::make_shared<Heightmap>(width, height, data);
@@ -123,7 +168,7 @@ PYBIND11_MODULE(_pydelatin, m) {
 
     py::class_<PydelatinTriangulator>(m, "PydelatinTriangulator")
         .def(py::init<
-          const std::vector<float> &, const int, const int,
+          const int, const int,
           const float, const float, const float,
           const int, const int, const bool, const bool, const int,
           const float, const int, const float, const float

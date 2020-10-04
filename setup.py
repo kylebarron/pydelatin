@@ -114,6 +114,7 @@ class BuildExt(build_ext):
 setup(
     name='pydelatin',
     version='0.0.1',
+    python_requires=">=3.6",
     author='Kyle Barron',
     author_email='kylebarron2@gmail.com',
     url='https://github.com/kylebarron/pydelatin',
