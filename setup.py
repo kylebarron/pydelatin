@@ -1,10 +1,8 @@
-import os
 import sys
 
 import setuptools
 from setuptools import Extension, find_packages, setup
 from setuptools.command.build_ext import build_ext
-
 
 with open("README.md") as f:
     readme = f.read()
@@ -22,15 +20,11 @@ class get_pybind_include(object):
         return pybind11.get_include()
 
 
-ci_build = os.getenv('CIBUILDWHEEL') == 1
 include_dirs = [
     # Path to pybind11 headers
     get_pybind_include()
 ]
 
-
-if os.getenv('CIBW_LINUX_INCLUDE'):
-    include_dirs.append(os.getenv('CIBW_LINUX_INCLUDE'))
 
 ext_modules = [
     Extension(
