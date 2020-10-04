@@ -56,4 +56,4 @@ class Pydelatin:
 
     @property
     def triangles(self):
-        return self.tri.getTriangles()
+        return self.tri.getTriangles().reshape(-1, 3)

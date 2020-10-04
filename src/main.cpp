@@ -58,7 +58,24 @@ struct PydelatinTriangulator {
 
       return result;
     }
-    const std::vector<glm::ivec3> &getTriangles() const { return triangles; }
+
+    const py::array_t<int32_t> getTriangles() const {
+      /* No pointer is passed, so NumPy will allocate the buffer */
+      auto result = py::array_t<int32_t>(triangles.size() * 3);
+
+      py::buffer_info buf = result.request();
+
+      int32_t *ptr1 = (int32_t *) buf.ptr;
+
+      for (size_t i = 0; i < triangles.size(); i++) {
+        const auto &p = triangles[i];
+        ptr1[i * 3 + 0] = p.x;
+        ptr1[i * 3 + 1] = p.y;
+        ptr1[i * 3 + 2] = p.z;
+      }
+
+      return result;
+    }
 
     void run() {
         const auto hm = std::make_shared<Heightmap>(width, height, data);
