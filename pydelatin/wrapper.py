@@ -45,9 +45,10 @@ class Pydelatin:
 
         height, width = arr.shape
         self.tri = PydelatinTriangulator(
-            arr.flatten(), width, height, max_error, z_scale, z_exag,
+            width, height, max_error, z_scale, z_exag,
             max_triangles, max_points, level, invert, blur, gamma, border_size,
             border_height, base_height)
+        self.tri.setData(arr.flatten())
         self.tri.run()
 
     @property

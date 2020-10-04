@@ -17,7 +17,7 @@ namespace py = pybind11;
 
 struct PydelatinTriangulator {
     PydelatinTriangulator(
-      const std::vector<float> &data, const int width, const int height,
+      const int width, const int height,
       const float maxError, const float zScale, const float zExaggeration,
       const int maxTriangles, const int maxPoints, const bool level,
       const bool invert, const int blurSigma, const float gamma,
@@ -38,7 +38,19 @@ struct PydelatinTriangulator {
     void setMaxError(const float &maxError_) { maxError = maxError_; }
     const float &getMaxError() const { return maxError; }
 
-    void setData(const std::vector<float> &data_) { data = data_; }
+    void setData(const py::array_t<float> &data_) {
+      // x must have ndim = 1; can be non-writeable
+      auto r = data_.unchecked<1>();
+      ssize_t size = r.shape(0);
+
+      std::vector<float> data__(size);
+
+      for (size_t i = 0; i < size; i++) {
+          data__[i] = r(i);
+      }
+
+      data = data__;
+    }
 
     // https://stackoverflow.com/a/49693704
     const py::array_t<float> getPoints() const {
@@ -155,7 +167,7 @@ PYBIND11_MODULE(_pydelatin, m) {
 
     py::class_<PydelatinTriangulator>(m, "PydelatinTriangulator")
         .def(py::init<
-          const std::vector<float> &, const int, const int,
+          const int, const int,
           const float, const float, const float,
           const int, const int, const bool, const bool, const int,
           const float, const int, const float, const float
