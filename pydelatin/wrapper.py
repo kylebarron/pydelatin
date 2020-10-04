@@ -52,7 +52,7 @@ class Pydelatin:
 
     @property
     def vertices(self):
-        return self.tri.getPoints()
+        return self.tri.getPoints().reshape(-1, 3)
 
     @property
     def triangles(self):

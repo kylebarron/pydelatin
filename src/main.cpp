@@ -40,9 +40,24 @@ struct PydelatinTriangulator {
 
     void setData(const std::vector<float> &data_) { data = data_; }
 
-    // NOTE: I _want_ to be able to return a py:array_t<glm:ivec3>
-    // That doesn't seem to work though
-    const std::vector<glm::vec3> &getPoints() const { return points; }
+    // https://stackoverflow.com/a/49693704
+    const py::array_t<float> getPoints() const {
+      /* No pointer is passed, so NumPy will allocate the buffer */
+      auto result = py::array_t<float>(points.size() * 3);
+
+      py::buffer_info buf = result.request();
+
+      float *ptr1 = (float *) buf.ptr;
+
+      for (size_t i = 0; i < points.size(); i++) {
+        const auto &p = points[i];
+        ptr1[i * 3 + 0] = p.x;
+        ptr1[i * 3 + 1] = p.y;
+        ptr1[i * 3 + 2] = p.z;
+      }
+
+      return result;
+    }
     const std::vector<glm::ivec3> &getTriangles() const { return triangles; }
 
     void run() {
