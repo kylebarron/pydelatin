@@ -21,7 +21,7 @@ jobs:
     - name: Install glm on linux
       if: startsWith(matrix.os, 'ubuntu')
       run: |
-        sudo apt install unzip
+        sudo apt install unzip wget
         # curl -s https://api.github.com/repos/g-truc/glm/releases/latest | grep download | grep zip | cut -d : -f 2,3 | tr -d \" | wget -qi -
         # unzip glm*.zip
         sudo apt-get install libglm-dev
