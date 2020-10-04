@@ -2,7 +2,8 @@
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 
-#include "pybind11_glm.hpp"
+// No longer needed because I'm creating numpy arrays to pass back
+// #include "pybind11_glm.hpp"
 
 #include <chrono>
 #include <functional>
