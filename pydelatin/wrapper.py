@@ -9,7 +9,8 @@ class Pydelatin:
     def __init__(
             self,
             arr: np.ndarray,
-            z_scale,
+            *,
+            z_scale: float = 1,
             z_exag: float = 1,
             max_error: float = 0.001,
             max_triangles: Optional[int] = None,
