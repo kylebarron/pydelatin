@@ -44,10 +44,7 @@ ext_modules = [
             'src/main.cpp',
             'src/triangulator.cpp',
         ]),
-        include_dirs=[
-            # Path to pybind11 headers
-            get_pybind_include(),
-        ],
+        include_dirs=include_dirs,
         language='c++'
     ),
 ]
