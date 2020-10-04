@@ -1,3 +1,4 @@
+import os
 import sys
 
 import setuptools
@@ -21,6 +22,16 @@ class get_pybind_include(object):
         return pybind11.get_include()
 
 
+ci_build = os.getenv('CIBUILDWHEEL') == 1
+include_dirs = [
+    # Path to pybind11 headers
+    get_pybind_include()
+]
+
+
+if os.getenv('CIBW_LINUX_INCLUDE'):
+    include_dirs.append(os.getenv('CIBW_LINUX_INCLUDE'))
+
 ext_modules = [
     Extension(
         '_pydelatin',
@@ -33,10 +44,7 @@ ext_modules = [
             'src/main.cpp',
             'src/triangulator.cpp',
         ]),
-        include_dirs=[
-            # Path to pybind11 headers
-            get_pybind_include(),
-        ],
+        include_dirs=include_dirs,
         language='c++'
     ),
 ]
