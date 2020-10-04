@@ -29,9 +29,8 @@ include_dirs = [
 ]
 
 
-if os.getenv('CIBW_ENVIRONMENT_LINUX'):
-    include_dirs.append(os.getenv('CIBW_ENVIRONMENT_LINUX'))
-
+if os.getenv('CIBW_LINUX_INCLUDE'):
+    include_dirs.append(os.getenv('CIBW_LINUX_INCLUDE'))
 
 ext_modules = [
     Extension(
