@@ -1,10 +1,10 @@
 import os
 import sys
+from pathlib import Path
 
 import setuptools
 from setuptools import Extension, find_packages, setup
 from setuptools.command.build_ext import build_ext
-
 
 with open("README.md") as f:
     readme = f.read()
@@ -30,7 +30,9 @@ include_dirs = [
 
 
 if os.getenv('CIBW_LINUX_INCLUDE'):
-    include_dirs.append(os.getenv('CIBW_LINUX_INCLUDE'))
+    include_path = os.getenv('CIBW_LINUX_INCLUDE')
+    include_dirs.append(str(Path(include_path).resolve()))
+
 
 ext_modules = [
     Extension(
