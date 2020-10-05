@@ -58,9 +58,9 @@ class Delatin:
             height, width = arr.shape
 
         self.tri = PydelatinTriangulator(
-            width, height, max_error, z_scale, z_exag,
-            max_triangles, max_points, level, invert, blur, gamma, border_size,
-            border_height, base_height)
+            width, height, max_error, z_scale, z_exag, max_triangles,
+            max_points, level, invert, blur, gamma, border_size, border_height,
+            base_height)
         self.tri.setData(arr.flatten())
         self.tri.run()
 
@@ -70,4 +70,5 @@ class Delatin:
 
     @property
     def triangles(self):
-        return self.tri.getTriangles().reshape(-1, 3)
+        return self.tri.getTriangles().reshape(-1, 3).astype(
+            np.uint32, casting='safe')
