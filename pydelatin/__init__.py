@@ -5,4 +5,4 @@ __email__ = 'kylebarron2@gmail.com'
 __version__ = '0.0.2'
 
 from .util import decode_ele
-from .wrapper import Pydelatin
+from .wrapper import Delatin

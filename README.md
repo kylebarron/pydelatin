@@ -21,9 +21,9 @@ prerequisite for building from source.
 ### Example
 
 ```py
-from pydelatin import Pydelatin
+from pydelatin import Delatin
 
-tin = Pydelatin(terrain, width, height)
+tin = Delatin(terrain, width, height)
 # Mesh vertices
 tin.vertices
 # Mesh triangles
@@ -37,7 +37,7 @@ The API is similar to that of [`hmm`][hmm].
 Additionally I include a helper function: `decode_ele`, to decode a Mapbox
 Terrain RGB or Terrarium PNG array to elevations.
 
-#### `Pydelatin`
+#### `Delatin`
 
 ##### Arguments
 

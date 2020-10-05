@@ -5,7 +5,7 @@ import numpy as np
 from _pydelatin import PydelatinTriangulator
 
 
-class Pydelatin:
+class Delatin:
     def __init__(
             self,
             arr: np.ndarray,
@@ -45,7 +45,7 @@ class Pydelatin:
             - border_size: border size in pixels
             - border_height: border z height
         """
-        super(Pydelatin, self).__init__()
+        super(Delatin, self).__init__()
 
         max_triangles = max_triangles if max_triangles is not None else 0
         max_points = max_points if max_points is not None else 0
