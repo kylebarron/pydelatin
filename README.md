@@ -104,3 +104,7 @@ mesh (max_error=18m): 37.657ms
 mesh (max_error=19m): 36.333ms
 mesh (max_error=20m): 34.131ms
 ```
+
+## License
+
+This package wraps @fogleman's [`hmm`][hmm], a C++ library that is also MIT-licensed.
