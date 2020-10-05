@@ -126,6 +126,7 @@ setup(
     packages=find_packages(include=['pydelatin', 'pydelatin.*']),
     ext_modules=ext_modules,
     install_requires=['numpy'],
+    extras_require={"test": ["pytest", "pytest-benchmark", "imageio"]},
     setup_requires=['pybind11>=2.5.0', 'numpy'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
