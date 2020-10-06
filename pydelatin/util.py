@@ -2,7 +2,7 @@ import numpy as np
 
 
 # This is copied from pymartini
-def decode_ele(png, encoding):
+def decode_ele(png: np.ndarray, encoding: str) -> np.ndarray:
     """Decode array to elevations
     Arguments:
         - png (np.ndarray). Ndarray of elevations encoded in three channels,
