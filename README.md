@@ -63,6 +63,31 @@ Terrain RGB or Terrarium PNG array to elevations.
 - `triangles` (`ndarray` of shape `(-1, 3)`): represents _indices_ within the `vertices` array. So `[0, 1, 3, ...]` would use the first, second, and fourth vertices within the `vertices` array as a single triangle.
 - `error` (`float`): the maximum error of the mesh.
 
+## `Martini` or `Delatin`?
+
+Two popular algorithms for terrain mesh generation are the **"Martini"** algorithm, found in the JavaScript [`martini`][martini] library and the Python [`pymartini`][pymartini] library, and the **"Delatin"** algorithm, found in the C++ [`hmm`][hmm] library, this Python `pydelatin` library, and the JavaScript [`delatin`][delatin] library.
+
+Which to use?
+
+For most purposes, use `pydelatin` over `pymartini`. A good breakdown from [a
+Martini issue][martini_desc_issue]:
+
+> Martini:
+>
+> - Only works on square 2^n+1 x 2^n+1 grids.
+> - Generates a hierarchy of meshes (pick arbitrary detail after a single run)
+> - Optimized for meshing speed rather than quality.
+>
+> Delatin:
+>
+> - Works on arbitrary raster grids.
+> - Generates a single mesh for a particular detail.
+> - Optimized for quality (as little triangles as possible for a given error).
+
+[martini]: https://github.com/mapbox/martini
+[pymartini]: https://github.com/kylebarron/pymartini
+[martini_desc_issue]: https://github.com/mapbox/martini/issues/15#issuecomment-700475731
+
 ## Benchmark
 
 The following uses the same dataset as the [`pymartini`
