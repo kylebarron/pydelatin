@@ -24,7 +24,7 @@ struct PydelatinTriangulator {
       const bool invert, const int blurSigma, const float gamma,
       const int borderSize, const float borderHeight, const float baseHeight
     ) :
-      data(data), width(width), height(height), maxError(maxError), zScale(zScale),
+      width(width), height(height), maxError(maxError), zScale(zScale),
       zExaggeration(zExaggeration), maxTriangles(maxTriangles), maxPoints(maxPoints),
       level(level), invert(invert), blurSigma(blurSigma), gamma(gamma),
       borderSize(borderSize), borderHeight(borderHeight), baseHeight(baseHeight)
