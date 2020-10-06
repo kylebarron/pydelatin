@@ -94,9 +94,6 @@ struct PydelatinTriangulator {
 
     void run() {
         const auto hm = std::make_shared<Heightmap>(width, height, data);
-        int w = hm->Width();
-        int h = hm->Height();
-
         // auto level heightmap
         if (level) {
             hm->AutoLevel();
@@ -121,6 +118,10 @@ struct PydelatinTriangulator {
         if (borderSize > 0) {
             hm->AddBorder(borderSize, borderHeight);
         }
+
+        // get updated size
+        int w = hm->Width();
+        int h = hm->Height();
 
         Triangulator tri(hm);
         tri.Run(maxError, maxTriangles, maxPoints);
