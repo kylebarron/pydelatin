@@ -70,5 +70,4 @@ class Delatin:
 
     @property
     def triangles(self):
-        return self.tri.getTriangles().reshape(-1, 3).astype(
-            np.uint32, casting='safe')
+        return self.tri.getTriangles().reshape(-1, 3).astype(np.uint32)
