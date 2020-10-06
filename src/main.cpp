@@ -90,6 +90,8 @@ struct PydelatinTriangulator {
       return result;
     }
 
+    const float &getError() const { return error; }
+
     void run() {
         const auto hm = std::make_shared<Heightmap>(width, height, data);
         int w = hm->Width();
@@ -124,6 +126,7 @@ struct PydelatinTriangulator {
         tri.Run(maxError, maxTriangles, maxPoints);
         points = tri.Points(zScale * zExaggeration);
         triangles = tri.Triangles();
+        error = tri.Error();
 
         // add base
         if (baseHeight > 0) {
@@ -150,6 +153,7 @@ struct PydelatinTriangulator {
     std::vector<float> data;
     std::vector<glm::vec3> points;
     std::vector<glm::ivec3> triangles;
+    float error;
 };
 
 PYBIND11_MODULE(_pydelatin, m) {
@@ -182,6 +186,7 @@ PYBIND11_MODULE(_pydelatin, m) {
         .def("setData", &PydelatinTriangulator::setData)
         .def("getPoints", &PydelatinTriangulator::getPoints)
         .def("getTriangles", &PydelatinTriangulator::getTriangles)
+        .def("getError", &PydelatinTriangulator::getError)
         .def("run", &PydelatinTriangulator::run)
         ;
 

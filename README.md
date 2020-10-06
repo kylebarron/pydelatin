@@ -61,6 +61,7 @@ Terrain RGB or Terrarium PNG array to elevations.
 
 - `vertices` (`ndarray` of shape `(-1, 3)`): the interleaved 3D coordinates of each vertex, e.g. `[[x0, y0, z0], [x1, y1, z1], ...]`.
 - `triangles` (`ndarray` of shape `(-1, 3)`): represents _indices_ within the `vertices` array. So `[0, 1, 3, ...]` would use the first, second, and fourth vertices within the `vertices` array as a single triangle.
+- `error` (`float`): the maximum error of the mesh.
 
 ## Benchmark
 
