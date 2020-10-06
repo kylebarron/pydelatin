@@ -73,6 +73,10 @@ benchmarks][pymartini_bench], a 512x512 pixel heightmap of Mt. Fuji.
 For the 30-meter mesh, `pydelatin` is 25% slower than `pymartini`, but the mesh
 is much more efficient: it has 40% fewer vertices and triangles.
 
+`pydelatin` is 4-5x faster than the JavaScript `delatin` package.
+
+### Python
+
 ```bash
 git clone https://github.com/kylebarron/pydelatin
 cd pydelatin
@@ -104,6 +108,46 @@ mesh (max_error=17m): 39.699ms
 mesh (max_error=18m): 37.657ms
 mesh (max_error=19m): 36.333ms
 mesh (max_error=20m): 34.131ms
+```
+
+### JS (Node)
+
+This benchmarks against the [`delatin`][delatin] JavaScript module.
+
+```bash
+git clone https://github.com/kylebarron/pydelatin
+cd test/bench_js/
+yarn
+wget https://raw.githubusercontent.com/mapbox/delatin/master/index.js
+node -r esm bench.js
+```
+
+```
+mesh (max_error=30m): 143.038ms
+vertices: 5668
+triangles: 11140
+
+mesh (max_error=0m): 1169.226ms
+mesh (max_error=1m): 917.290ms
+mesh (max_error=2m): 629.776ms
+mesh (max_error=3m): 476.958ms
+mesh (max_error=4m): 352.907ms
+mesh (max_error=5m): 290.946ms
+mesh (max_error=6m): 240.556ms
+mesh (max_error=7m): 234.181ms
+mesh (max_error=8m): 188.273ms
+mesh (max_error=9m): 162.743ms
+mesh (max_error=10m): 145.734ms
+mesh (max_error=11m): 130.119ms
+mesh (max_error=12m): 119.865ms
+mesh (max_error=13m): 114.645ms
+mesh (max_error=14m): 101.390ms
+mesh (max_error=15m): 100.065ms
+mesh (max_error=16m): 96.247ms
+mesh (max_error=17m): 89.508ms
+mesh (max_error=18m): 85.754ms
+mesh (max_error=19m): 79.838ms
+mesh (max_error=20m): 75.607ms
 ```
 
 ## License
