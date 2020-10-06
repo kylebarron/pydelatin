@@ -65,7 +65,11 @@ Terrain RGB or Terrarium PNG array to elevations.
 
 ## `Martini` or `Delatin`?
 
-Two popular algorithms for terrain mesh generation are the **"Martini"** algorithm, found in the JavaScript [`martini`][martini] library and the Python [`pymartini`][pymartini] library, and the **"Delatin"** algorithm, found in the C++ [`hmm`][hmm] library, this Python `pydelatin` library, and the JavaScript [`delatin`][delatin] library.
+Two popular algorithms for terrain mesh generation are the **"Martini"**
+algorithm, found in the JavaScript [`martini`][martini] library and the Python
+[`pymartini`][pymartini] library, and the **"Delatin"** algorithm, found in the
+C++ [`hmm`][hmm] library, this Python `pydelatin` library, and the JavaScript
+[`delatin`][delatin] library.
 
 Which to use?
 
@@ -82,7 +86,7 @@ Martini issue][martini_desc_issue]:
 >
 > - Works on arbitrary raster grids.
 > - Generates a single mesh for a particular detail.
-> - Optimized for quality (as little triangles as possible for a given error).
+> - Optimized for quality (as few triangles as possible for a given error).
 
 [martini]: https://github.com/mapbox/martini
 [pymartini]: https://github.com/kylebarron/pymartini
