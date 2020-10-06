@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 
@@ -37,3 +39,12 @@ def decode_ele(png: np.ndarray, encoding: str) -> np.ndarray:
         terrain = (red + green + blue) - 32768
 
     return terrain
+
+
+def latitude_adjustment(lat: float):
+    """Latitude adjustment for web-mercator projection
+
+    Args:
+        - lat: latitude in degrees
+    """
+    return math.cos(math.radians(lat))
