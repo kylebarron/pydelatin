@@ -77,6 +77,55 @@ represents a single 3D point.
 - `flip_y`: (`bool`, default `False`) Flip y coordinates. Can be useful since
   images' coordinate origin is in the top left.
 
+### Saving to mesh formats
+
+#### Quantized Mesh
+
+A common mesh format for the web is the [Quantized Mesh][quantized-mesh-spec]
+format, which is supported in Cesium and deck.gl (via
+[loaders.gl][loaders.gl-quantized-mesh]). You can use
+[`quantized-mesh-encoder`][quantized-mesh-encoder] to save in this format:
+
+```py
+import quantized_mesh_encoder
+from pydelatin import Delatin
+from pydelatin.util import rescale_positions
+
+tin = Delatin(terrain, max_error=30)
+vertices, triangles = tin.vertices, tin.triangles
+
+# Rescale vertices linearly from pixel units to world coordinates
+rescaled_vertices = rescale_positions(vertices, bounds)
+
+with open('output.terrain', 'wb') as f:
+    quantized_mesh_encoder.encode(f, rescaled_vertices, triangles)
+```
+
+[quantized-mesh-spec]: https://github.com/CesiumGS/quantized-mesh
+[quantized-mesh-encoder]: https://github.com/kylebarron/quantized-mesh-encoder
+[loaders.gl-quantized-mesh]: https://loaders.gl/modules/terrain/docs/api-reference/quantized-mesh-loader
+
+#### Meshio
+
+Alternatively, you can save to a variety of mesh formats using
+[`meshio`][meshio]:
+
+```py
+from pydelatin import Delatin
+import meshio
+
+tin = Delatin(terrain, max_error=30)
+vertices, triangles = tin.vertices, tin.triangles
+
+cells = [("triangle", triangles)]
+mesh = meshio.Mesh(vertices, cells)
+# Example output format
+# Refer to meshio documentation
+mesh.write('foo.vtk')
+```
+
+[meshio]: https://github.com/nschloe/meshio
+
 ## `Martini` or `Delatin`?
 
 Two popular algorithms for terrain mesh generation are the **"Martini"**
