@@ -5,4 +5,4 @@ __email__ = 'kylebarron2@gmail.com'
 __version__ = '0.1.0'
 
 from . import util
-from .wrapper import Delatin
+from .delatin import Delatin
