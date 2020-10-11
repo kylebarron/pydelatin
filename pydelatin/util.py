@@ -1,4 +1,5 @@
 import math
+from typing import Tuple
 
 import numpy as np
 
@@ -39,6 +40,43 @@ def decode_ele(png: np.ndarray, encoding: str) -> np.ndarray:
         terrain = (red + green + blue) - 32768
 
     return terrain
+
+
+def rescale_positions(
+        vertices: np.ndarray,
+        bounds: Tuple[float, float, float, float],
+        flip_y: bool = False):
+    """Rescale positions to bounding box
+
+    Args:
+        - vertices: vertices output from Delatin
+        - bounds: linearly rescale position values to this extent, expected to
+          be [minx, miny, maxx, maxy].
+        - flip_y: (bool) Flip y coordinates. Can be useful since images'
+          coordinate origin is in the top left.
+
+    Returns:
+        (np.ndarray): ndarray of shape (-1, 3) with positions rescaled. Each row
+        represents a single 3D point.
+    """
+    out = np.zeros(vertices.shape, dtype=np.float32)
+
+    tile_size = vertices[:, :2].max()
+    minx, miny, maxx, maxy = bounds
+    x_scale = (maxx - minx) / tile_size
+    y_scale = (maxy - miny) / tile_size
+
+    if flip_y:
+        scalar = np.array([x_scale, -y_scale])
+        offset = np.array([minx, maxy])
+    else:
+        scalar = np.array([x_scale, y_scale])
+        offset = np.array([minx, miny])
+
+    # Rescale x, y positions
+    out[:, :2] = vertices[:, :2] * scalar + offset
+    out[:, 2] = vertices[:, 2]
+    return out
 
 
 def latitude_adjustment(lat: float):

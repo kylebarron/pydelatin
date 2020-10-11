@@ -63,6 +63,20 @@ Terrain RGB or Terrarium PNG array to elevations.
 - `triangles` (`ndarray` of shape `(-1, 3)`): represents _indices_ within the `vertices` array. So `[0, 1, 3, ...]` would use the first, second, and fourth vertices within the `vertices` array as a single triangle.
 - `error` (`float`): the maximum error of the mesh.
 
+#### `util.rescale_positions`
+
+A helper function to rescale the `vertices` output to a new bounding box.
+Returns an `ndarray` of shape `(-1, 3)` with positions rescaled. Each row
+represents a single 3D point.
+
+##### Arguments
+
+- `vertices`: (`np.ndarray`) vertices output from Delatin
+- `bounds`: (`Tuple[float]`) linearly rescale position values to this extent.
+  Expected to be `[minx, miny, maxx, maxy]`.
+- `flip_y`: (`bool`, default `False`) Flip y coordinates. Can be useful since
+  images' coordinate origin is in the top left.
+
 ## `Martini` or `Delatin`?
 
 Two popular algorithms for terrain mesh generation are the **"Martini"**
@@ -181,4 +195,5 @@ mesh (max_error=20m): 75.607ms
 
 ## License
 
-This package wraps @fogleman's [`hmm`][hmm], a C++ library that is also MIT-licensed.
+This package wraps \@fogleman's [`hmm`][hmm], a C++ library that is also
+MIT-licensed.
