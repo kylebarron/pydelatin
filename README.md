@@ -2,8 +2,21 @@
 
 A Python wrapper of [`hmm`][hmm] (of which [Delatin][delatin] is a port) for fast terrain mesh generation.
 
+[![][image_url]][example]
+
+[image_url]: https://raw.githubusercontent.com/kylebarron/pydelatin/master/assets/glac.jpg
+[example]: https://kylebarron.dev/quantized-mesh-encoder
+
 [hmm]: https://github.com/fogleman/hmm
 [delatin]: https://github.com/mapbox/delatin
+
+A screenshot of Glacier National Park taken from [the demo][example]. The mesh
+is created using `pydelatin`, encoded using
+[`quantized-mesh-encoder`][quantized-mesh-encoder], served on-demand using
+[`dem-tiler`][dem-tiler], and rendered with [deck.gl](https://deck.gl).
+
+[quantized-mesh-encoder]: https://github.com/kylebarron/quantized-mesh-encoder
+[dem-tiler]: https://github.com/kylebarron/dem-tiler
 
 ## Install
 
