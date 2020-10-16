@@ -1,3 +1,4 @@
+import os
 import sys
 
 import setuptools
@@ -25,6 +26,10 @@ include_dirs = [
     get_pybind_include()
 ]
 
+# Allow for adding include dir via environment variable
+# This is helpful for Windows CI wheel builds
+if os.getenv('PYDELATIN_INCLUDE_DIRS'):
+    include_dirs.append(os.getenv('PYDELATIN_INCLUDE_DIRS'))
 
 ext_modules = [
     Extension(
