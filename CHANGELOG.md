@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.1] - 2020-10-19
+
+- Fixes to allow for a Conda package on Windows
+
 ## [0.2.0] - 2020-10-10
 
 - Update docs with instructions for saving mesh
