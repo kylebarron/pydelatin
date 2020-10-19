@@ -1,6 +1,6 @@
-#include "triangulator.h"
-
 #include <algorithm>
+
+#include "triangulator.h"
 
 Triangulator::Triangulator(const std::shared_ptr<Heightmap> &heightmap) :
     m_Heightmap(heightmap) {}
