@@ -32,9 +32,11 @@ or with Conda:
 conda install -c conda-forge pydelatin
 ```
 
-Binary wheels are provided for macOS and Linux. On Windows, [`glm`][glm] is a
-prerequisite for building from source. Open an issue if you'd like to help
-package binary wheels for Windows.
+On Windows, installing via Conda is strongly recommended.
+
+If installing with pip on Windows, [`glm`][glm] is a prerequisite for building
+from source. Open an issue if you'd like to help package binary wheels for
+Windows.
 
 [glm]: https://glm.g-truc.net/
 
