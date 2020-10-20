@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.2] - 2020-10-19
+
+- Fix accidentally not including the last fix in 0.2.1
+
 ## [0.2.1] - 2020-10-19
 
 - Fixes to allow for a Conda package on Windows
