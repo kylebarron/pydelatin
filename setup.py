@@ -1,4 +1,6 @@
+import os
 import sys
+from pathlib import Path
 
 import setuptools
 from setuptools import Extension, find_packages, setup
@@ -25,6 +27,11 @@ include_dirs = [
     get_pybind_include()
 ]
 
+# Allow for adding include dir via environment variable
+# This is helpful for Windows CI wheel builds
+if os.getenv('PYDELATIN_INCLUDE_DIRS'):
+    path = os.getenv('PYDELATIN_INCLUDE_DIRS')
+    include_dirs.append(str(Path(path).resolve()))
 
 ext_modules = [
     Extension(
