@@ -30,6 +30,8 @@ class Delatin:
             - arr: data array. If a 2D array, dimensions are expected to be
               (height, width). If a 1D array, height and width parameters must
               be passed, and the array is assumed to be in C order.
+
+        Kwargs:
             - height: height of array; required when arr is not 2D
             - width: width of array; required when arr is not 2D
             - z_scale: z scale relative to x & y
@@ -45,8 +47,6 @@ class Delatin:
             - border_size: border size in pixels
             - border_height: border z height
         """
-        super().__init__()
-
         max_triangles = max_triangles if max_triangles is not None else 0
         max_points = max_points if max_points is not None else 0
 
