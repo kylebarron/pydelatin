@@ -1,6 +1,7 @@
 from time import time
 
 from imageio import imread
+
 from pydelatin import Delatin
 from pydelatin.util import decode_ele
 

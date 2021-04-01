@@ -1,6 +1,7 @@
 include CHANGELOG.md
 include LICENSE
 include README.md
+include pydelatin/py.typed
 
 global-include *.cpp
 global-include *.h
