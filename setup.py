@@ -1,3 +1,5 @@
+# type: ignore
+# pylint: disable=import-outside-toplevel
 import sys
 
 import setuptools
@@ -8,23 +10,20 @@ with open("README.md") as f:
     readme = f.read()
 
 
-class get_pybind_include(object):
+class get_pybind_include:
     """Helper class to determine the pybind11 include path
 
     The purpose of this class is to postpone importing pybind11
     until it is actually installed, so that the ``get_include()``
-    method can be invoked. """
-
+    method can be invoked.
+    """
     def __str__(self):
         import pybind11
         return pybind11.get_include()
 
 
-include_dirs = [
-    # Path to pybind11 headers
-    get_pybind_include()
-]
-
+# Path to pybind11 headers
+include_dirs = [get_pybind_include()]
 
 ext_modules = [
     Extension(
@@ -32,16 +31,10 @@ ext_modules = [
         # Sort input source files to ensure bit-for-bit reproducible builds
         # (https://github.com/pybind/python_example/pull/53)
         sorted([
-            'src/base.cpp',
-            'src/blur.cpp',
-            'src/heightmap.cpp',
-            'src/main.cpp',
-            'src/triangulator.cpp',
-        ]),
+            'src/base.cpp', 'src/blur.cpp', 'src/heightmap.cpp', 'src/main.cpp',
+            'src/triangulator.cpp']),
         include_dirs=include_dirs,
-        language='c++'
-    ),
-]
+        language='c++'), ]
 
 
 # cf http://bugs.python.org/issue26689
@@ -49,8 +42,10 @@ def has_flag(compiler, flagname):
     """Return a boolean indicating whether a flag name is supported on
     the specified compiler.
     """
-    import tempfile
     import os
+    import tempfile
+
+    # pylint: disable=redefined-outer-name
     with tempfile.NamedTemporaryFile('w', suffix='.cpp', delete=False) as f:
         f.write('int main (int argc, char **argv) { return 0; }')
         fname = f.name
@@ -77,20 +72,19 @@ def cpp_flag(compiler):
         if has_flag(compiler, flag):
             return flag
 
-    raise RuntimeError('Unsupported compiler -- at least C++11 support '
-                       'is needed!')
+    raise RuntimeError(
+        'Unsupported compiler -- at least C++11 support '
+        'is needed!')
 
 
 class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
     c_opts = {
         'msvc': ['/EHsc'],
-        'unix': [],
-    }
+        'unix': [], }
     l_opts = {
         'msvc': [],
-        'unix': [],
-    }
+        'unix': [], }
 
     if sys.platform == 'darwin':
         darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']
@@ -107,7 +101,8 @@ class BuildExt(build_ext):
                 opts.append('-fvisibility=hidden')
 
         for ext in self.extensions:
-            ext.define_macros = [('VERSION_INFO', '"{}"'.format(self.distribution.get_version()))]
+            ext.define_macros = [(
+                'VERSION_INFO', '"{}"'.format(self.distribution.get_version()))]
             ext.extra_compile_args = opts
             ext.extra_link_args = link_opts
         build_ext.build_extensions(self)
