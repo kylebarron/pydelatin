@@ -3,8 +3,8 @@ name: Build Wheels
 # Only run on new tags starting with `v`
 on:
   push:
-    tags:
-      - 'v*'
+    # tags:
+    #   - 'v*'
 
 jobs:
   build_wheels:
@@ -12,44 +12,28 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, macos-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: set environment variables
-      uses: allenevans/set-env@v1.1.0
-      with:
-        # Only build on CPython
-        # PyPy on macos seems to be failing; see https://github.com/joerick/cibuildwheel/issues/402
-        CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
+    - name: Build wheels
+      uses: pypa/cibuildwheel@v2.1.1
+      env:
+        # From rio-color here:
+        # https://github.com/mapbox/rio-color/blob/0ab59ad8e2db99ad1d0c8bd8c2e4cf8d0c3114cf/appveyor.yml#L3
+        # Skip Python 3.10 until officially released, as numpy wheels aren't yet
+        # available
+        CIBW_SKIP: "cp2* cp35* cp310* pp* *-win32 *-manylinux_i686"
+        CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+        CIBW_ARCHS_LINUX: x86_64 aarch64
+        CIBW_BEFORE_BUILD: python -m pip install numpy Cython
         CIBW_BEFORE_BUILD_MACOS: python -m pip install numpy Cython pybind11 && brew install glm
         CIBW_BEFORE_ALL_LINUX: curl -sL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip > glm.zip && unzip -q glm.zip && cp -r glm/glm/ /usr/include/
-
-    - uses: actions/setup-python@v1
-      name: Install Python
-      with:
-        python-version: '3.7'
-
-    - name: Install cibuildwheel
-      run: |
-        python -m pip install cibuildwheel==1.6.1
-
-    - name: Build wheel
-      run: |
-        python -m cibuildwheel --output-dir wheelhouse
 
     - uses: actions/upload-artifact@v2
       with:
         path: ./wheelhouse/*.whl
-
-    # - name: Publish wheels to PyPI
-    #   env:
-    #     TWINE_USERNAME: __token__
-    #     TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-    #   run: |
-    #     python -m pip install twine
-    #     twine upload wheelhouse/*.whl
 
   build_sdist:
     name: Build source distribution
@@ -69,21 +53,17 @@ jobs:
         with:
           path: dist/*.tar.gz
 
-  upload_pypi:
-    needs: [build_wheels, build_sdist]
-    runs-on: ubuntu-latest
-    # upload to PyPI on every tag starting with 'v'
-    # if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
-    # alternatively, to publish when a GitHub Release is created, use the following rule:
-    # if: github.event_name == 'release' && github.event.action == 'published'
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: artifact
-          path: dist
-
-      - uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
-          # To test: repository_url: https://test.pypi.org/legacy/
+  # upload_pypi:
+  #   needs: [build_wheels, build_sdist]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: artifact
+  #         path: dist
+  #
+  #     - uses: pypa/gh-action-pypi-publish@master
+  #       with:
+  #         user: __token__
+  #         password: ${{ secrets.pypi_password }}
+  #         # To test: repository_url: https://test.pypi.org/legacy/
