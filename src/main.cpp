@@ -42,7 +42,7 @@ struct PydelatinTriangulator {
     void setData(const py::array_t<float> &data_) {
       // x must have ndim = 1; can be non-writeable
       auto r = data_.unchecked<1>();
-      ssize_t size = r.shape(0);
+      Py_ssize_t size = r.shape(0);
 
       std::vector<float> data__(size);
 
