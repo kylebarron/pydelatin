@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.3] - 2021-11-08
+
+- Fix ssize_t on Windows (#24), thanks @davidbrochart !
+
 ## [0.2.2] - 2020-10-19
 
 - Fix accidentally not including the last fix in 0.2.1
