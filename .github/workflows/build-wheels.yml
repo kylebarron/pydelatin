@@ -22,9 +22,7 @@ jobs:
       env:
         # From rio-color here:
         # https://github.com/mapbox/rio-color/blob/0ab59ad8e2db99ad1d0c8bd8c2e4cf8d0c3114cf/appveyor.yml#L3
-        # Skip Python 3.10 until officially released, as numpy wheels aren't yet
-        # available
-        CIBW_SKIP: "cp2* cp35* cp310* pp* *-win32 *-manylinux_i686"
+        CIBW_SKIP: "cp2* cp35* pp* *-win32 *-manylinux_i686"
         # glm dependency is available for apple silicon only on big sur. Github
         # Actions does not yet offer big sur:
         # https://github.com/actions/virtual-environments/issues/2486
