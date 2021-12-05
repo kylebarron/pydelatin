@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.4] - 2021-12-05
+
+- Build wheels for Python 3.10
+
 ## [0.2.3] - 2021-11-08
 
 - Fix ssize_t on Windows (#24), thanks @davidbrochart !
