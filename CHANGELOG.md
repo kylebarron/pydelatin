@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.5] - 2021-12-05
+
+- Build wheels for Mac ARM architectures
+
 ## [0.2.4] - 2021-12-05
 
 - Build wheels for Python 3.10
