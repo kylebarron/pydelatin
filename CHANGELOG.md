@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.6] - 2021-12-05
+
+- Use `oldest-supported-numpy` package when building wheels for greatest compatibility support
+
 ## [0.2.5] - 2021-12-05
 
 - Build wheels for Mac ARM architectures
