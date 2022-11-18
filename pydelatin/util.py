@@ -43,9 +43,10 @@ def decode_ele(png: np.ndarray, encoding: str) -> np.ndarray:
 
 
 def rescale_positions(
-        vertices: np.ndarray,
-        bounds: Tuple[float, float, float, float],
-        flip_y: bool = False):
+    vertices: np.ndarray,
+    bounds: Tuple[float, float, float, float],
+    flip_y: bool = False,
+):
     """Rescale positions to bounding box
 
     Args:
