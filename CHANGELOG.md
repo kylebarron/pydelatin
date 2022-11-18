@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.7] - 2022-11-18
+
+- PEP 518-compliant with `pyproject.toml` and `build-system`
+
 ## [0.2.6] - 2021-12-05
 
 - Use `oldest-supported-numpy` package when building wheels for greatest compatibility support
