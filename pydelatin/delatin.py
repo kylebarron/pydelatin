@@ -7,23 +7,24 @@ from _pydelatin import PydelatinTriangulator
 
 class Delatin:
     def __init__(
-            self,
-            arr: np.ndarray,
-            *,
-            height: Optional[int] = None,
-            width: Optional[int] = None,
-            z_scale: float = 1,
-            z_exag: float = 1,
-            max_error: float = 0.001,
-            max_triangles: Optional[int] = None,
-            max_points: Optional[int] = None,
-            base_height: float = 0,
-            level: bool = False,
-            invert: bool = False,
-            blur: int = 0,
-            gamma: float = 0,
-            border_size: int = 0,
-            border_height: float = 1):
+        self,
+        arr: np.ndarray,
+        *,
+        height: Optional[int] = None,
+        width: Optional[int] = None,
+        z_scale: float = 1,
+        z_exag: float = 1,
+        max_error: float = 0.001,
+        max_triangles: Optional[int] = None,
+        max_points: Optional[int] = None,
+        base_height: float = 0,
+        level: bool = False,
+        invert: bool = False,
+        blur: int = 0,
+        gamma: float = 0,
+        border_size: int = 0,
+        border_height: float = 1
+    ):
         """
 
         Args:
@@ -58,9 +59,21 @@ class Delatin:
             height, width = arr.shape
 
         self.tri = PydelatinTriangulator(
-            width, height, max_error, z_scale, z_exag, max_triangles,
-            max_points, level, invert, blur, gamma, border_size, border_height,
-            base_height)
+            width,
+            height,
+            max_error,
+            z_scale,
+            z_exag,
+            max_triangles,
+            max_points,
+            level,
+            invert,
+            blur,
+            gamma,
+            border_size,
+            border_height,
+            base_height,
+        )
         self.tri.setData(arr.flatten())
         self.tri.run()
 
