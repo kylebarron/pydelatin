@@ -18,7 +18,7 @@ ext_modules = [
 
 setup(
     name="pydelatin",
-    version="0.2.7",
+    version="0.2.8",
     python_requires=">=3.6",
     author="Kyle Barron",
     author_email="kylebarron2@gmail.com",
