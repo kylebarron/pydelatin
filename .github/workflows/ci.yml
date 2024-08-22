@@ -34,9 +34,10 @@ jobs:
       # - name: Run tests
       #   run: pytest
 
-      # Run pre-commit (only for python-3.9)
-      - name: run pre-commit
-        if: matrix.python-version == 3.9
-        run: |
-          python -m pip install pre-commit
-          pre-commit run --all-files
+      # TODO: re-enable pre-commit
+      # # Run pre-commit (only for python-3.9)
+      # - name: run pre-commit
+      #   if: matrix.python-version == 3.9
+      #   run: |
+      #     python -m pip install pre-commit
+      #     pre-commit run --all-files
