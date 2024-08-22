@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.8] - 2024-08-22
+
+- Updated wheel builds
+
 ## [0.2.7] - 2022-11-18
 
 - PEP 518-compliant with `pyproject.toml` and `build-system`
