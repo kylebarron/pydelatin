@@ -4,7 +4,7 @@ name: Build Wheels
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build_wheels:
@@ -15,21 +15,21 @@ jobs:
         os: [ubuntu-latest, macos-11]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Build wheels
-      uses: pypa/cibuildwheel@v2.20.0
-      env:
-        # From rio-color here:
-        # https://github.com/mapbox/rio-color/blob/0ab59ad8e2db99ad1d0c8bd8c2e4cf8d0c3114cf/appveyor.yml#L3
-        CIBW_SKIP: "cp2* cp35* pp* *-win32 *-manylinux_i686"
-        CIBW_ARCHS_MACOS: x86_64 arm64
-        CIBW_BEFORE_BUILD_MACOS: brew install glm
-        CIBW_BEFORE_ALL_LINUX: curl -sL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip > glm.zip && unzip -q glm.zip && cp -r glm/glm/ /usr/include/
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.20.0
+        env:
+          # From rio-color here:
+          # https://github.com/mapbox/rio-color/blob/0ab59ad8e2db99ad1d0c8bd8c2e4cf8d0c3114cf/appveyor.yml#L3
+          CIBW_SKIP: "cp2* cp35* pp* *-win32 *-manylinux_i686"
+          CIBW_ARCHS_MACOS: x86_64 arm64
+          CIBW_BEFORE_BUILD_MACOS: brew install glm
+          CIBW_BEFORE_ALL_LINUX: curl -sL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip > glm.zip && unzip -q glm.zip && cp -r glm/glm/ /usr/include/
 
-    - uses: actions/upload-artifact@v2
-      with:
-        path: ./wheelhouse/*.whl
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
 
   build_sdist:
     name: Build source distribution
@@ -40,7 +40,7 @@ jobs:
       - uses: actions/setup-python@v2
         name: Install Python
         with:
-          python-version: '3.7'
+          python-version: "3.11"
 
       - name: Build sdist
         run: |
