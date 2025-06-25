@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] - 2025-06-25
+
+- Numpy v2 support.
+- Updated wheels
+- Min Python version 3.9
+
 ## [0.2.8] - 2024-08-22
 
 - Updated wheel builds
