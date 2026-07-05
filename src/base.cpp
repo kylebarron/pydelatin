@@ -1,10 +1,29 @@
 #include "base.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-
-#include <glm/gtx/hash.hpp>
+#include <cstddef>
+#include <functional>
 #include <map>
 #include <unordered_map>
+
+namespace {
+
+struct Vec3Hash {
+    std::size_t operator()(const glm::vec3 &v) const noexcept {
+        std::size_t seed = 0;
+        const std::hash<float> hasher;
+        HashCombine(seed, hasher(v.x));
+        HashCombine(seed, hasher(v.y));
+        HashCombine(seed, hasher(v.z));
+        return seed;
+    }
+
+private:
+    static void HashCombine(std::size_t &seed, const std::size_t hash) noexcept {
+        seed ^= hash + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+};
+
+} // namespace
 
 void AddBase(
     std::vector<glm::vec3> &points,
@@ -18,7 +37,11 @@ void AddBase(
     std::map<int, float> x1s;
     std::map<int, float> y0s;
     std::map<int, float> y1s;
+#ifdef _MSC_VER
+    std::unordered_map<glm::vec3, int, Vec3Hash> lookup;
+#else 
     std::unordered_map<glm::vec3, int> lookup;
+#endif
 
     // find points along each edge
     for (int i = 0; i < points.size(); i++) {
