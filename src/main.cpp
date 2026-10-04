@@ -157,7 +157,7 @@ struct PydelatinTriangulator {
     float error;
 };
 
-PYBIND11_MODULE(_pydelatin, m) {
+PYBIND11_MODULE(_pydelatin, m, py::mod_gil_not_used()) {
     m.doc() = R"pbdoc(
         Pybind11 example plugin
         -----------------------
