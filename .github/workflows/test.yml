@@ -13,6 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "latest"
+
+      # Ensure docs build without warnings. Docs are generated from source,
+      # so this doesn't need to compile the extension.
+      - name: Check docs
+        run: uv run --only-group docs mkdocs build --strict
+
       # Use ruff-action so we get annotations in the Github UI
       - uses: astral-sh/ruff-action@v4.1.0
 
