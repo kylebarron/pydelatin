@@ -30,7 +30,7 @@ jobs:
           CIBW_ENVIRONMENT_MACOS: CPLUS_INCLUDE_PATH=$(brew --prefix glm)/include:$CPLUS_INCLUDE_PATH
           CIBW_BEFORE_ALL_LINUX: curl -sL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip > glm.zip && unzip -q glm.zip && cp -r glm/glm/ /usr/include/
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
@@ -51,7 +51,7 @@ jobs:
           python -m pip install build
           python -m build . --sdist
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sdist
           path: dist/*.tar.gz
