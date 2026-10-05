@@ -1,26 +1,36 @@
+"""Helpers for decoding elevation tiles and rescaling Delatin output."""
+
+from __future__ import annotations
+
 import math
-from typing import Tuple
 
 import numpy as np
+
+# Arrays with at most this many entries in the first axis are assumed to be
+# band-first and are transposed to band-last
+_MAX_BANDS = 4
 
 
 # This is copied from pymartini
 def decode_ele(png: np.ndarray, encoding: str) -> np.ndarray:
-    """Decode array to elevations
-    Arguments:
-        - png (np.ndarray). Ndarray of elevations encoded in three channels,
-          representing red, green, and blue. Must be of shape (tile_size,
-          tile_size, >=3), where `tile_size` is usually 256 or 512
-        - encoding: (str): Either 'mapbox' or 'terrarium', the two main RGB
-          encodings for elevation values.
-    Returns:
-        (np.array) Array of shape (tile_size^2) with decoded elevation values
-    """
-    allowed_encodings = ['mapbox', 'terrarium']
-    if encoding not in allowed_encodings:
-        raise ValueError(f'encoding must be one of {allowed_encodings}')
+    """Decode an RGB-encoded elevation array to elevations.
 
-    if png.shape[0] <= 4:
+    Args:
+        png: Array of elevations encoded in three channels, representing red,
+            green, and blue. Must be of shape (tile_size, tile_size, >=3),
+            where `tile_size` is usually 256 or 512.
+        encoding: Either `"mapbox"` or `"terrarium"`, the two main RGB
+            encodings for elevation values.
+
+    Returns:
+        Array of shape (tile_size, tile_size) with decoded elevation values.
+
+    """
+    allowed_encodings = ["mapbox", "terrarium"]
+    if encoding not in allowed_encodings:
+        raise ValueError(f"encoding must be one of {allowed_encodings}")
+
+    if png.shape[0] <= _MAX_BANDS:
         png = png.T
 
     # Promote to float so integer (e.g. uint8) inputs don't overflow, since
@@ -28,14 +38,14 @@ def decode_ele(png: np.ndarray, encoding: str) -> np.ndarray:
     png = png.astype(np.float64)
 
     # Get bands
-    if encoding == 'mapbox':
+    if encoding == "mapbox":
         red = png[:, :, 0] * (256 * 256)
         green = png[:, :, 1] * (256)
         blue = png[:, :, 2]
 
         # Compute float height
         terrain = (red + green + blue) / 10 - 10000
-    elif encoding == 'terrarium':
+    elif encoding == "terrarium":
         red = png[:, :, 0] * (256)
         green = png[:, :, 1]
         blue = png[:, :, 2] / 256
@@ -48,21 +58,22 @@ def decode_ele(png: np.ndarray, encoding: str) -> np.ndarray:
 
 def rescale_positions(
     vertices: np.ndarray,
-    bounds: Tuple[float, float, float, float],
-    flip_y: bool = False,
-):
-    """Rescale positions to bounding box
+    bounds: tuple[float, float, float, float],
+    flip_y: bool = False,  # noqa: FBT001, FBT002 (positional for backwards compatibility)
+) -> np.ndarray:
+    """Rescale positions to bounding box.
 
     Args:
-        - vertices: vertices output from Delatin
-        - bounds: linearly rescale position values to this extent, expected to
-          be [minx, miny, maxx, maxy].
-        - flip_y: (bool) Flip y coordinates. Can be useful since images'
-          coordinate origin is in the top left.
+        vertices: Vertices output from Delatin.
+        bounds: Linearly rescale position values to this extent, expected to
+            be `[minx, miny, maxx, maxy]`.
+        flip_y: Flip y coordinates. Can be useful since images' coordinate
+            origin is in the top left.
 
     Returns:
-        (np.ndarray): ndarray of shape (-1, 3) with positions rescaled. Each row
-        represents a single 3D point.
+        Array of shape (-1, 3) with positions rescaled. Each row represents a
+        single 3D point.
+
     """
     out = np.zeros(vertices.shape, dtype=np.float32)
 
@@ -84,10 +95,14 @@ def rescale_positions(
     return out
 
 
-def latitude_adjustment(lat: float):
-    """Latitude adjustment for web-mercator projection
+def latitude_adjustment(lat: float) -> float:
+    """Latitude adjustment for web-mercator projection.
 
     Args:
-        - lat: latitude in degrees
+        lat: Latitude in degrees.
+
+    Returns:
+        Scale factor to apply at this latitude.
+
     """
     return math.cos(math.radians(lat))
