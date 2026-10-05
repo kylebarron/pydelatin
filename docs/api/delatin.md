@@ -1,0 +1,3 @@
+# Delatin
+
+::: pydelatin.Delatin
