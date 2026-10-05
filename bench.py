@@ -5,7 +5,7 @@ from imageio import imread
 from pydelatin import Delatin
 from pydelatin.util import decode_ele
 
-path = "./test/data/fuji.png"
+path = "./tests/data/fuji.png"
 fuji = imread(path)
 terrain = decode_ele(fuji, "mapbox")
 

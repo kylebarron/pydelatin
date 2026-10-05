@@ -231,7 +231,7 @@ This benchmarks against the [`delatin`][delatin] JavaScript module.
 
 ```bash
 git clone https://github.com/kylebarron/pydelatin
-cd test/bench_js/
+cd pydelatin/tests/bench_js/
 yarn
 wget https://raw.githubusercontent.com/mapbox/delatin/master/index.js
 node -r esm bench.js
