@@ -1,59 +1,63 @@
-from typing import Optional
+"""Terrain mesh generation from a heightmap."""
+
+from __future__ import annotations
 
 import numpy as np
-
 from _pydelatin import PydelatinTriangulator
 
 
 class Delatin:
-    def __init__(
+    """Triangulated irregular network (TIN) generated from a heightmap."""
+
+    def __init__(  # noqa: PLR0913
         self,
         arr: np.ndarray,
         *,
-        height: Optional[int] = None,
-        width: Optional[int] = None,
+        height: int | None = None,
+        width: int | None = None,
         z_scale: float = 1,
         z_exag: float = 1,
         max_error: float = 0.001,
-        max_triangles: Optional[int] = None,
-        max_points: Optional[int] = None,
+        max_triangles: int | None = None,
+        max_points: int | None = None,
         base_height: float = 0,
         level: bool = False,
         invert: bool = False,
         blur: int = 0,
         gamma: float = 0,
         border_size: int = 0,
-        border_height: float = 1
-    ):
-        """
+        border_height: float = 1,
+    ) -> None:
+        """Generate a mesh from a heightmap.
 
         Args:
-            - arr: data array. If a 2D array, dimensions are expected to be
-              (height, width). If a 1D array, height and width parameters must
-              be passed, and the array is assumed to be in C order.
+            arr: Data array. If a 2D array, dimensions are expected to be
+                (height, width). If a 1D array, height and width parameters
+                must be passed, and the array is assumed to be in C order.
 
-        Kwargs:
-            - height: height of array; required when arr is not 2D
-            - width: width of array; required when arr is not 2D
-            - z_scale: z scale relative to x & y
-            - z_exag: z exaggeration
-            - max_error: maximum triangulation error
-            - max_triangles: maximum number of triangles
-            - max_points: maximum number of vertices
-            - base_height: solid base height
-            - level: auto level input to full grayscale range
-            - invert: invert heightmap
-            - blur: gaussian blur sigma
-            - gamma: gamma curve exponent
-            - border_size: border size in pixels
-            - border_height: border z height
+        Keyword Args:
+            height: Height of array; required when arr is not 2D.
+            width: Width of array; required when arr is not 2D.
+            z_scale: Z scale relative to x & y.
+            z_exag: Z exaggeration.
+            max_error: Maximum triangulation error.
+            max_triangles: Maximum number of triangles.
+            max_points: Maximum number of vertices.
+            base_height: Solid base height.
+            level: Auto level input to full grayscale range.
+            invert: Invert heightmap.
+            blur: Gaussian blur sigma.
+            gamma: Gamma curve exponent.
+            border_size: Border size in pixels.
+            border_height: Border z height.
+
         """
         max_triangles = max_triangles if max_triangles is not None else 0
         max_points = max_points if max_points is not None else 0
 
-        if len(arr.shape) != 2:
+        if arr.ndim != 2:  # noqa: PLR2004
             if height is None or width is None:
-                msg = 'Height and width must be passed when arr is not 2D'
+                msg = "Height and width must be passed when arr is not 2D"
                 raise ValueError(msg)
         else:
             height, width = arr.shape
@@ -78,13 +82,16 @@ class Delatin:
         self.tri.run()
 
     @property
-    def vertices(self):
+    def vertices(self) -> np.ndarray:
+        """Mesh vertices, as an array of shape (-1, 3) of x, y, z positions."""
         return self.tri.getPoints().reshape(-1, 3)
 
     @property
-    def triangles(self):
+    def triangles(self) -> np.ndarray:
+        """Mesh triangles, as an array of shape (-1, 3) of vertex indices."""
         return self.tri.getTriangles().reshape(-1, 3).astype(np.uint32)
 
     @property
-    def error(self):
+    def error(self) -> float:
+        """Maximum error of the generated mesh."""
         return self.tri.getError()

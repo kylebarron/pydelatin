@@ -121,7 +121,7 @@ vertices, triangles = tin.vertices, tin.triangles
 # Rescale vertices linearly from pixel units to world coordinates
 rescaled_vertices = rescale_positions(vertices, bounds)
 
-with open('output.terrain', 'wb') as f:
+with open("output.terrain", "wb") as f:
     quantized_mesh_encoder.encode(f, rescaled_vertices, triangles)
 ```
 
@@ -145,7 +145,7 @@ cells = [("triangle", triangles)]
 mesh = meshio.Mesh(vertices, cells)
 # Example output format
 # Refer to meshio documentation
-mesh.write('foo.vtk')
+mesh.write("foo.vtk")
 ```
 
 [meshio]: https://github.com/nschloe/meshio

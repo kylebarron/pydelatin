@@ -9,3 +9,5 @@ try:
     __version__ = version("pydelatin")
 except PackageNotFoundError:
     __version__ = "uninstalled"
+
+__all__ = ["Delatin", "__version__", "util"]
