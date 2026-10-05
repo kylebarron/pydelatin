@@ -7,5 +7,6 @@ global-include *.cpp
 global-include *.h
 
 recursive-include tests *
+prune tests/bench_js
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
