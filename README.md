@@ -196,8 +196,7 @@ is much more efficient: it has 40% fewer vertices and triangles.
 ```bash
 git clone https://github.com/kylebarron/pydelatin
 cd pydelatin
-pip install '.[test]'
-python bench.py
+uv run python bench.py
 ```
 
 ```
