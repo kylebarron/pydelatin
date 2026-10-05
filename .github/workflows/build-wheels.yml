@@ -41,15 +41,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v7
-        name: Install Python
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
-          python-version: "3.12"
+          version: "latest"
 
       - name: Build sdist
-        run: |
-          python -m pip install build
-          python -m build . --sdist
+        run: uv build --sdist
 
       - uses: actions/upload-artifact@v7
         with:
@@ -57,17 +55,21 @@ jobs:
           path: dist/*.tar.gz
 
   upload_pypi:
+    name: Upload release to PyPI
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    environment:
+      # Note: this environment must be configured in the repo settings
+      name: pypi-release
+      url: https://pypi.org/p/pydelatin
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
       - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
-          # To test: repository_url: https://test.pypi.org/legacy/
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
