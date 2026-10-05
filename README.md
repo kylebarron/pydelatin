@@ -4,7 +4,7 @@ A Python wrapper of [`hmm`][hmm] (of which [Delatin][delatin] is a port) for fas
 
 [![][image_url]][example]
 
-[image_url]: https://raw.githubusercontent.com/kylebarron/pydelatin/master/assets/glac.jpg
+[image_url]: https://raw.githubusercontent.com/kylebarron/pydelatin/main/assets/glac.jpg
 [example]: https://kylebarron.dev/quantized-mesh-encoder
 
 [hmm]: https://github.com/fogleman/hmm

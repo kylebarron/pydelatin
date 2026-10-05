@@ -29,7 +29,7 @@ dependencies = ["numpy"]
 Homepage = "https://github.com/kylebarron/pydelatin"
 Repository = "https://github.com/kylebarron/pydelatin"
 Issues = "https://github.com/kylebarron/pydelatin/issues"
-Changelog = "https://github.com/kylebarron/pydelatin/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/kylebarron/pydelatin/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = ["imageio>=2.9", "pytest>=8"]
