@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [0.4.0] - 2026-10-05
+
 - Windows wheels (x86-64).
 - New documentation website built with mkdocs and mkdocstrings.
 - Fix `decode_ele` raising `OverflowError` for `uint8` input (e.g. from reading a PNG) with numpy 2.
