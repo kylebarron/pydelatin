@@ -60,6 +60,9 @@ include = ["pydelatin", "pydelatin.*"]
 
 [tool.cibuildwheel]
 skip = "cp38*"
+# Run the test suite against each built wheel
+test-groups = ["dev"]
+test-command = "pytest {project}/tests"
 
 [tool.ruff.lint]
 select = ["ALL"]

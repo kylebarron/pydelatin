@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         # macos-15-intel is an intel runner, macos-14 is apple silicon
-        os: [ubuntu-latest, ubuntu-24.04-arm, macos-15-intel, macos-14]
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-15-intel, macos-14, windows-latest]
 
     steps:
       - uses: actions/checkout@v7
@@ -29,6 +29,10 @@ jobs:
           CIBW_BEFORE_BUILD_MACOS: brew install glm
           CIBW_ENVIRONMENT_MACOS: CPLUS_INCLUDE_PATH=$(brew --prefix glm)/include:$CPLUS_INCLUDE_PATH
           CIBW_BEFORE_ALL_LINUX: curl -sL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip > glm.zip && unzip -q glm.zip && cp -r glm/glm/ /usr/include/
+          # glm is header-only, so download it outside the project and add it
+          # to MSVC's include path. cl.exe reads extra options from `CL`.
+          CIBW_BEFORE_ALL_WINDOWS: curl -sL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip -o %RUNNER_TEMP%\glm.zip && tar -xf %RUNNER_TEMP%\glm.zip -C %RUNNER_TEMP%
+          CIBW_ENVIRONMENT_WINDOWS: CL="/I$RUNNER_TEMP/glm"
 
       - uses: actions/upload-artifact@v7
         with:
