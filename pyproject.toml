@@ -1,6 +1,6 @@
 [project]
 name = "pydelatin"
-version = "0.3.0"
+version = "0.4.0"
 description = "A Python wrapper of hmm for fast terrain mesh generation"
 readme = "README.md"
 authors = [{ name = "Kyle Barron", email = "kylebarron2@gmail.com" }]
@@ -8,19 +8,19 @@ requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
-    "Programming Language :: C++",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Topic :: Scientific/Engineering :: GIS",
-    "Typing :: Typed",
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Scientific/Engineering :: GIS",
+  "Typing :: Typed",
 ]
 keywords = ["terrain", "mesh", "delatin", "elevation", "gis", "3d"]
 dependencies = ["numpy"]
@@ -34,15 +34,15 @@ Changelog = "https://github.com/kylebarron/pydelatin/blob/main/CHANGELOG.md"
 [dependency-groups]
 dev = ["imageio>=2.9", "pytest>=8"]
 docs = [
-    # Workaround for https://github.com/mkdocs/mkdocs/issues/4032
-    "click<8.3",
-    "mkdocs-material[imaging]>=9.5.49",
-    "mkdocs>=1.6.1,<2",
-    "mkdocstrings[python]>=1.0",
-    "mike>=2.1.3",
-    # We use ruff format ourselves, but mkdocstrings requires black to be
-    # installed to format signatures in the docs
-    "black>=24",
+  # Workaround for https://github.com/mkdocs/mkdocs/issues/4032
+  "click<8.3",
+  "mkdocs-material[imaging]>=9.5.49",
+  "mkdocs>=1.6.1,<2",
+  "mkdocstrings[python]>=1.0",
+  "mike>=2.1.3",
+  # We use ruff format ourselves, but mkdocstrings requires black to be
+  # installed to format signatures in the docs
+  "black>=24",
 ]
 
 # The docs toolchain needs a newer Python than the package itself supports
@@ -67,28 +67,28 @@ test-command = "pytest {project}/tests"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "COM812", # trailing comma; conflicts with ruff format
-    "CPY001", # copyright header
-    "D203",   # incompatible with D211
-    "D213",   # incompatible with D212
-    "EM101",  # raw string in exception
-    "EM102",  # f-string in exception
-    "FIX002", # todo statements
-    "TD002",  # todo without author name
-    "TRY003", # define exceptions in the exception class
+  "COM812", # trailing comma; conflicts with ruff format
+  "CPY001", # copyright header
+  "D203",   # incompatible with D211
+  "D213",   # incompatible with D212
+  "EM101",  # raw string in exception
+  "EM102",  # f-string in exception
+  "FIX002", # todo statements
+  "TD002",  # todo without author name
+  "TRY003", # define exceptions in the exception class
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
-    "ANN001",  # annotation in function argument
-    "ANN201",  # return type annotation
-    "PLR2004", # Magic value used in comparison
-    "S101",    # assert
-    "SLF001",  # private member access
-    "D",       # docstring
+  "ANN001",  # annotation in function argument
+  "ANN201",  # return type annotation
+  "PLR2004", # Magic value used in comparison
+  "S101",    # assert
+  "SLF001",  # private member access
+  "D",       # docstring
 ]
 "bench.py" = [
-    "D",    # docstring
-    "INP001", # implicit namespace package
-    "T201", # print
+  "D",      # docstring
+  "INP001", # implicit namespace package
+  "T201",   # print
 ]
