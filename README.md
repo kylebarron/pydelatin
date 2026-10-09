@@ -47,7 +47,10 @@ Windows.
 ```py
 from pydelatin import Delatin
 
-tin = Delatin(terrain, width, height)
+# `terrain` is a 2D array of shape (height, width)
+tin = Delatin(terrain, max_error=30)
+# For a flat (1D) array, pass its dimensions as keyword arguments
+tin = Delatin(terrain.ravel(), height=height, width=width, max_error=30)
 # Mesh vertices
 tin.vertices
 # Mesh triangles
@@ -64,6 +67,8 @@ Terrain RGB or Terrarium PNG array to elevations.
 #### `Delatin`
 
 ##### Arguments
+
+All arguments other than `arr` are keyword-only.
 
 - `arr` (numpy `ndarray`): data array. If a 2D array, dimensions are expected to be (height, width). If a 1D array, height and width parameters must be passed, and the array is assumed to be in C order.
 - `height` (`int`, default: `None`): height of array; required when arr is not 2D
