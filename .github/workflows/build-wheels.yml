@@ -13,7 +13,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # macos-15-intel is an intel runner, macos-14 is apple silicon
+        # macos-15-intel is an intel runner, macos-14 is apple silicon. Each
+        # builds only its native architecture, so no two jobs produce wheels
+        # with the same filename (which would collide when the upload job
+        # merges the artifacts).
         os: [ubuntu-latest, ubuntu-24.04-arm, macos-15-intel, macos-14, windows-latest]
 
     steps:
@@ -25,7 +28,6 @@ jobs:
           # From rio-color here:
           # https://github.com/mapbox/rio-color/blob/0ab59ad8e2db99ad1d0c8bd8c2e4cf8d0c3114cf/appveyor.yml#L3
           CIBW_SKIP: "cp2* cp35* pp* *-win32 *-manylinux_i686"
-          CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_BEFORE_BUILD_MACOS: brew install glm
           CIBW_ENVIRONMENT_MACOS: CPLUS_INCLUDE_PATH=$(brew --prefix glm)/include:$CPLUS_INCLUDE_PATH
           CIBW_BEFORE_ALL_LINUX: curl -sL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip > glm.zip && unzip -q glm.zip && cp -r glm/glm/ /usr/include/
